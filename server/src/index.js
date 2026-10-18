@@ -3,6 +3,9 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import path from 'node:path';
+import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { config } from './config.js';
 import { notFound, errorHandler, asyncHandler } from './middleware/errors.js';
 import { requireAdmin } from './middleware/auth.js';
@@ -16,7 +19,11 @@ import { Thrust, Platform, Person, Publication, News, Opening, Message } from '.
 
 const app = express();
 app.set('trust proxy', 1); // behind Render/Railway/Nginx, so rate limits see the real client IP
-app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+  // Allow images from Cloudinary or other https hosts (photos added from the admin panel)
+  contentSecurityPolicy: { directives: { 'img-src': ["'self'", 'data:', 'https:'] } },
+}));
 app.use(cors({
   origin: (origin, cb) => (!origin || config.clientOrigins.includes(origin) ? cb(null, true) : cb(null, false)),
 }));
@@ -29,6 +36,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/uploads', uploadRoutes);
 app.use('/api/messages', messageRoutes);
+// Photos shipped with the code (server/assets/uploads) are served first, then admin uploads
+const HERE = path.dirname(fileURLToPath(import.meta.url));
+app.use('/uploads', express.static(path.join(HERE, '..', 'assets', 'uploads'), { maxAge: '30d' }));
 app.use('/uploads', express.static(UPLOAD_DIR, { maxAge: '30d', fallthrough: false }));
 
 app.use('/api/thrusts', crudRouter(Thrust));
@@ -62,6 +72,13 @@ app.get('/api/admin/summary', requireAdmin, asyncHandler(async (req, res) => {
   ]);
   res.json({ thrusts, people, publications, news, openings, unread });
 }));
+
+// In production, also serve the built React site from the same service
+const CLIENT_DIST = path.join(HERE, '..', '..', 'client', 'dist');
+if (fs.existsSync(path.join(CLIENT_DIST, 'index.html'))) {
+  app.use(express.static(CLIENT_DIST, { maxAge: '1h', index: false }));
+  app.get(/^\/(?!api\/|uploads\/).*/, (req, res) => res.sendFile(path.join(CLIENT_DIST, 'index.html')));
+}
 
 app.use(notFound);
 app.use(errorHandler);

@@ -1,7 +1,7 @@
 import { PageHead, Avatar, Loading, ErrorNote, Empty } from '../components/ui.jsx';
 import { useApi } from '../lib/hooks.js';
 
-const ORDER = ['Faculty', 'Scientists & postdocs', 'PhD students', 'MTech & MSc students', 'Project staff', 'Alumni'];
+const ORDER = ['Faculty', 'Scientists & postdocs', 'PhD students', 'MTech & MSc students', 'Undergraduate researchers', 'Project staff', 'Alumni'];
 
 export default function People() {
   const { data, error, loading, reload } = useApi('/people');

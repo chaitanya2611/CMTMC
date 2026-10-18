@@ -30,7 +30,7 @@ export const COLLECTIONS = {
     fields: [
       { name: 'name', label: 'Full name', kind: 'text', required: true },
       { name: 'role', label: 'Role or designation', kind: 'text' },
-      { name: 'group', label: 'Group', kind: 'select', options: ['Faculty', 'Scientists & postdocs', 'PhD students', 'MTech & MSc students', 'Project staff', 'Alumni'] },
+      { name: 'group', label: 'Group', kind: 'select', options: ['Faculty', 'Scientists & postdocs', 'PhD students', 'MTech & MSc students', 'Undergraduate researchers', 'Project staff', 'Alumni'] },
       { name: 'photo', label: 'Photo', kind: 'image' },
       { name: 'bio', label: 'Short bio', kind: 'textarea', rows: 4 },
       { name: 'interests', label: 'Research interests', kind: 'tags', help: 'Separate with commas' },

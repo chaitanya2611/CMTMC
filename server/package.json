@@ -5,12 +5,15 @@
   "description": "API for the Centre for ML-Driven Traditional Medicine and Catalysis website",
   "type": "module",
   "main": "src/index.js",
-  "engines": { "node": ">=18.18" },
+  "engines": {
+    "node": ">=18.18"
+  },
   "scripts": {
     "dev": "node --watch src/index.js",
     "start": "node src/index.js",
     "seed": "node src/seed.js",
-    "hash-password": "node src/utils/hashPassword.js"
+    "hash-password": "node src/utils/hashPassword.js",
+    "import-old": "node src/importOld.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

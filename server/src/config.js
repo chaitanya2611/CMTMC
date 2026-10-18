@@ -22,6 +22,7 @@ export const config = {
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
   cloudinaryUrl: process.env.CLOUDINARY_URL || '',
   cloudinaryFolder: process.env.CLOUDINARY_FOLDER || 'cmtmc',
-  publicApiUrl: (process.env.PUBLIC_API_URL || `http://localhost:${process.env.PORT || 5000}`).replace(/\/$/, ''),
+  // In production the site and API share one origin, so upload links can be relative (/uploads/...)
+  publicApiUrl: (process.env.PUBLIC_API_URL ?? (process.env.NODE_ENV === 'production' ? '' : `http://localhost:${process.env.PORT || 5000}`)).replace(/\/$/, ''),
   crossrefMailto: process.env.CROSSREF_MAILTO || process.env.ADMIN_EMAIL,
 };

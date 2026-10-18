@@ -1,0 +1,380 @@
+[
+  {
+    "name": "Prof. Debabrata Maiti",
+    "role": "Professor, Chemistry",
+    "group": "Faculty",
+    "bio": "",
+    "interests": [],
+    "email": "dmaiti@chem.iitb.ac.in",
+    "photo": "/uploads/people-debabrata-maiti.jpg",
+    "order": 0
+  },
+  {
+    "name": "Prof. Shivaram Kalyanakrishnan",
+    "role": "Professor, Computer Science & Engineering",
+    "group": "Faculty",
+    "bio": "",
+    "interests": [],
+    "email": "shivaram@cse.iitb.ac.in",
+    "photo": "/uploads/people-shivaram-kalyanakrishnan.jpg",
+    "order": 1
+  },
+  {
+    "name": "Prof. Suryendu Dutta",
+    "role": "Professor, Earth Sciences",
+    "group": "Faculty",
+    "bio": "",
+    "interests": [],
+    "email": "s.dutta@iitb.ac.in",
+    "photo": "/uploads/people-suryendu-dutta.jpg",
+    "order": 2
+  },
+  {
+    "name": "Prof. Ruchi Anand",
+    "role": "Professor, Chemistry",
+    "group": "Faculty",
+    "bio": "",
+    "interests": [],
+    "email": "ruchi@chem.iitb.ac.in",
+    "photo": "/uploads/people-ruchi-anand.jpg",
+    "order": 3
+  },
+  {
+    "name": "Prof. Ashutosh Kumar",
+    "role": "Professor, BSBE",
+    "group": "Faculty",
+    "bio": "",
+    "interests": [],
+    "email": "ashutoshk@iitb.ac.in",
+    "photo": "/uploads/people-ashutosh-kumar.jpg",
+    "order": 4
+  },
+  {
+    "name": "Prof. Arnab Dutta",
+    "role": "Professor, Chemistry",
+    "group": "Faculty",
+    "bio": "",
+    "interests": [],
+    "email": "arnabdutta@chem.iitb.ac.in",
+    "photo": "/uploads/people-arnab-dutta.jpg",
+    "order": 5
+  },
+  {
+    "name": "Prof. Prasenjit Bhaumik",
+    "role": "Professor, BSBE",
+    "group": "Faculty",
+    "bio": "",
+    "interests": [],
+    "email": "pbhaumik@iitb.ac.in",
+    "photo": "/uploads/people-prasenjit-bhaumik.jpg",
+    "order": 6
+  },
+  {
+    "name": "Prof. Prasenjit Ghosh",
+    "role": "Professor, Chemistry",
+    "group": "Faculty",
+    "bio": "",
+    "interests": [],
+    "email": "pghosh@chem.iitb.ac.in",
+    "photo": "/uploads/people-prasenjit-ghosh.jpg",
+    "order": 7
+  },
+  {
+    "name": "Prof. Venkateswarlu Yarlagadda",
+    "role": "Professor, Chemistry",
+    "group": "Faculty",
+    "bio": "",
+    "interests": [],
+    "email": "venky@chem.iitb.ac.in",
+    "photo": "/uploads/people-venkateswarlu-yarlagadda.jpg",
+    "order": 8
+  },
+  {
+    "name": "Prof. Sandip Kar",
+    "role": "Professor, Chemistry",
+    "group": "Faculty",
+    "bio": "",
+    "interests": [],
+    "email": "sandipkar@chem.iitb.ac.in",
+    "photo": "/uploads/people-sandip-kar.jpg",
+    "order": 9
+  },
+  {
+    "name": "Prof. Irishi N. N. Namboothiri",
+    "role": "Professor, Chemistry",
+    "group": "Faculty",
+    "bio": "",
+    "interests": [],
+    "email": "irishi@chem.iitb.ac.in",
+    "photo": "/uploads/people-irishi-namboothiri.jpg",
+    "order": 10
+  },
+  {
+    "name": "Prof. Satyadeep Waiba",
+    "role": "Professor, Chemistry",
+    "group": "Faculty",
+    "bio": "",
+    "interests": [],
+    "email": "swaiba@chem.iitb.ac.in",
+    "photo": "/uploads/people-satyadeep-waiba.jpg",
+    "order": 11
+  },
+  {
+    "name": "Prof. Rahul Maitra",
+    "role": "Professor, Chemistry",
+    "group": "Faculty",
+    "bio": "",
+    "interests": [],
+    "email": "rmaitra@chem.iitb.ac.in",
+    "photo": "/uploads/people-rahul-maitra.jpg",
+    "order": 12
+  },
+  {
+    "name": "Anirban Pal",
+    "role": "PhD Candidate (Lab In-Charge)",
+    "group": "PhD students",
+    "bio": "Research focuses on AI-driven molecular discovery at the intersection of chemistry, biology, and machine learning, using deep generative models and multi-omics integration for drug discovery, precision oncology, and translational biomedical applications.",
+    "interests": [
+      "Generative Models",
+      "Drug Discovery",
+      "Multi-omics",
+      "Precision Oncology"
+    ],
+    "email": "25d2008@iitb.ac.in",
+    "order": 0
+  },
+  {
+    "name": "Dhruv Goyal",
+    "role": "Undergraduate Researcher",
+    "group": "Undergraduate researchers",
+    "bio": "Passionate about machine learning and coding. Enjoys travel, coffee culture, and Formula 1. Works on innovative computational projects and AI applications.",
+    "interests": [
+      "Machine Learning",
+      "Software Engineering",
+      "AI Applications"
+    ],
+    "email": "23b2122@iitb.ac.in",
+    "order": 1
+  },
+  {
+    "name": "Devendra Singh Sengar",
+    "role": "M.Tech Researcher",
+    "group": "MTech & MSc students",
+    "bio": "Deep interest in cancer biology and machine learning. Exploring how ML can uncover hidden patterns in diseases for developing effective therapies. Enjoys chess, singing, and acting.",
+    "interests": [
+      "Cancer Biology",
+      "Machine Learning",
+      "Therapeutic Development"
+    ],
+    "email": "devendrasinghsengar1998@gmail.com",
+    "order": 2
+  },
+  {
+    "name": "Harsh Kumar Singh",
+    "role": "Undergraduate Researcher",
+    "group": "Undergraduate researchers",
+    "bio": "Interested in reinforcement learning architectures and their foundations. Enjoys chess and martial arts practice.",
+    "interests": [
+      "Reinforcement Learning",
+      "ML Architectures",
+      "Deep Learning"
+    ],
+    "email": "23b2444@iitb.ac.in",
+    "order": 3
+  },
+  {
+    "name": "Rudra Gangurde",
+    "role": "Undergraduate Researcher",
+    "group": "Undergraduate researchers",
+    "bio": "Passionate about mathematics, machine learning, and bioinformatics. Works on reasoning-based models, multimodal learning, and generative modeling.",
+    "interests": [
+      "Bioinformatics",
+      "Generative Modeling",
+      "Multimodal Learning"
+    ],
+    "email": "23b2260@iitb.ac.in",
+    "order": 4
+  },
+  {
+    "name": "Aryan Kayande",
+    "role": "Undergraduate Researcher",
+    "group": "Undergraduate researchers",
+    "bio": "Interested in Machine Learning, Computer Vision, and Robotics. Tech enthusiast and chess player.",
+    "interests": [
+      "Machine Learning",
+      "Computer Vision",
+      "Robotics"
+    ],
+    "email": "23b2174@iitb.ac.in",
+    "order": 5
+  },
+  {
+    "name": "Aarav Gupta",
+    "role": "Undergraduate Researcher",
+    "group": "Undergraduate researchers",
+    "bio": "Passionate about learning how systems work from scratch. Loves AI applications and making robots. Enjoys podcasts and Formula 1.",
+    "interests": [
+      "AI Applications",
+      "Robotics",
+      "Electronics"
+    ],
+    "email": "24b2235@iitb.ac.in",
+    "order": 6
+  },
+  {
+    "name": "Harshil Solanki",
+    "role": "Undergraduate Researcher",
+    "group": "Undergraduate researchers",
+    "bio": "Deeply curious and hands-on learner. Enjoys reading, playing guitar, writing poetry, and philosophical discussions.",
+    "interests": [
+      "Machine Learning",
+      "Systems Thinking",
+      "Data Science"
+    ],
+    "email": "23b1016@iitb.ac.in",
+    "order": 7
+  },
+  {
+    "name": "Mukunth Prathish S",
+    "role": "Undergraduate Researcher",
+    "group": "Undergraduate researchers",
+    "bio": "Group-oriented learner focused on gaining comprehensive knowledge and applying it to real-world problems.",
+    "interests": [
+      "Machine Learning",
+      "Data Science",
+      "AI Applications"
+    ],
+    "email": "24b1267@iitb.ac.in",
+    "order": 8
+  },
+  {
+    "name": "Neepun Nandan",
+    "role": "Undergraduate Researcher",
+    "group": "Undergraduate researchers",
+    "bio": "Multi-sport athlete interested in diverse projects beyond coursework. Loves traveling and working on interesting problems.",
+    "interests": [
+      "Machine Learning",
+      "Research Projects",
+      "Interdisciplinary Work"
+    ],
+    "email": "24b0691@iitb.ac.in",
+    "order": 9
+  },
+  {
+    "name": "Arnav Prasad",
+    "role": "Undergraduate Researcher",
+    "group": "Undergraduate researchers",
+    "bio": "Fascinated by AI evolution from mathematical foundations to creative applications. Works on generative and voice AI. Enjoys chess and cinema.",
+    "interests": [
+      "Generative AI",
+      "Voice AI",
+      "Foundation Models"
+    ],
+    "email": "24b0625@iitb.ac.in",
+    "order": 10
+  },
+  {
+    "name": "Aryan Shah",
+    "role": "Undergraduate Researcher",
+    "group": "Undergraduate researchers",
+    "bio": "Cricket and Formula 1 enthusiast. Enjoys exploring diverse interests, gaming, and game nights.",
+    "interests": [
+      "Machine Learning",
+      "Data Analysis",
+      "AI Systems"
+    ],
+    "email": "24b2215@iitb.ac.in",
+    "order": 11
+  },
+  {
+    "name": "Mansi Sharma",
+    "role": "Undergraduate Researcher",
+    "group": "Undergraduate researchers",
+    "bio": "Avid reader and thinker. Works on projects with focused energy bursts. Interested in exploring historical and unusual places.",
+    "interests": [
+      "Machine Learning",
+      "Research Analysis",
+      "Data Science"
+    ],
+    "email": "24b1302@iitb.ac.in",
+    "order": 12
+  },
+  {
+    "name": "Angel Singhvi",
+    "role": "Undergraduate Researcher",
+    "group": "Undergraduate researchers",
+    "bio": "Well-traveled with diverse international experience. Passionate about healthcare and food culture. Loves football.",
+    "interests": [
+      "Healthcare Technology",
+      "AI in Medicine",
+      "Biomedical Research"
+    ],
+    "email": "24b2134@iitb.ac.in",
+    "order": 13
+  },
+  {
+    "name": "Maitreyee Markale",
+    "role": "Undergraduate Researcher",
+    "group": "Undergraduate researchers",
+    "bio": "Electrical Engineering student interested in aeromodelling and systems work. Convenor of Aeromodelling club.",
+    "interests": [
+      "Machine Learning",
+      "Systems Design",
+      "Engineering Applications"
+    ],
+    "email": "24b3926@iitb.ac.in",
+    "order": 14
+  },
+  {
+    "name": "Shreshta Bathini",
+    "role": "Undergraduate Researcher",
+    "group": "Undergraduate researchers",
+    "bio": "Enjoys reading, writing, and exploring food and cultures. Passionate about continuous learning and self-improvement.",
+    "interests": [
+      "Machine Learning",
+      "Data Science",
+      "AI Applications"
+    ],
+    "email": "24b1085@iitb.ac.in",
+    "order": 15
+  },
+  {
+    "name": "Atharv Airen",
+    "role": "Undergraduate Researcher",
+    "group": "Undergraduate researchers",
+    "bio": "First-year Electrical Engineering student with passion for mathematics and machine learning. Relaxes with gaming and football.",
+    "interests": [
+      "Machine Learning",
+      "Mathematics",
+      "AI Foundations"
+    ],
+    "email": "25b1207@iitb.ac.in",
+    "order": 16
+  },
+  {
+    "name": "Keshaw Ranjan",
+    "role": "Undergraduate Researcher",
+    "group": "Undergraduate researchers",
+    "bio": "Computer Science student exploring AI/ML, networking, and hardware. Enjoys sci-fi movies and technical deep dives.",
+    "interests": [
+      "Machine Learning",
+      "AI Systems",
+      "Computer Science"
+    ],
+    "email": "24b0908@iitb.ac.in",
+    "order": 17
+  },
+  {
+    "name": "Siddharth Verma",
+    "role": "Undergraduate Researcher",
+    "group": "Undergraduate researchers",
+    "bio": "Passionate about physics-informed models, foundation models, and generative learning. Works on diffusion/flow-based methods and structured representations rooted in physical laws.",
+    "interests": [
+      "Diffusion Models",
+      "Foundation Models",
+      "Physics-Informed ML"
+    ],
+    "email": "22b2153@iitb.ac.in",
+    "order": 18
+  }
+]

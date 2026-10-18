@@ -63,17 +63,14 @@ The seed adds placeholder content in square brackets, such as `[Centre Head]`. R
 
 Deploy the API and the website separately. Two easy options:
 
-### Option A: Render (both parts, one click)
-1. Create a free MongoDB Atlas cluster and copy its connection string.
-2. In Render choose **New → Blueprint**, select this repository, and Render reads `render.yaml`.
-3. Fill in the values it asks for:
-   - `MONGODB_URI`: your Atlas connection string
-   - `ADMIN_EMAIL` and `ADMIN_PASSWORD_HASH`: from `npm run hash-password`. On Render, paste the hash **without** the quotes.
-   - `CLIENT_ORIGIN`: the website's URL, e.g. `https://cmtmc-web.onrender.com`
-   - `PUBLIC_API_URL`: the API's URL, e.g. `https://cmtmc-api.onrender.com`
-   - `VITE_API_URL` (static site): the API's URL
-   - `CLOUDINARY_URL`: see the note on images below
-4. Run the seed once from the API service's **Shell** tab: `npm run seed`.
+### Option A: Render (recommended, one service)
+`render.yaml` runs the API and serves the built React site from one free web service, so there is a single URL and no CORS setup.
+1. Create a free MongoDB Atlas cluster. Under **Network Access** allow `0.0.0.0/0`, then copy the connection string.
+2. In Render choose **New → Blueprint** and select this repository.
+3. Fill in `MONGODB_URI` (Atlas string) and `ADMIN_PASSWORD_HASH` (from `npm run hash-password`, pasted **without** quotes).
+4. On every start the service seeds an empty database and loads the real people from `server/import/people.json` once, so no shell step is needed.
+
+Notes: photos uploaded from the admin panel are stored on the service's disk, which Render's free plan wipes on each deploy. Set `CLOUDINARY_URL` to keep them. Photos imported from the old site live in `server/assets/uploads` and are always kept.
 
 ### Option B: Vercel (website) + Render or Railway (API)
 - **Website:** import the repo into Vercel with root directory `client` and set `VITE_API_URL`. `client/vercel.json` already handles page routing.

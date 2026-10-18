@@ -43,7 +43,7 @@ export const Platform = model('Platform', new Schema({
   order: { type: Number, default: 0 },
 }, opts));
 
-export const PEOPLE_GROUPS = ['Faculty', 'Scientists & postdocs', 'PhD students', 'MTech & MSc students', 'Project staff', 'Alumni'];
+export const PEOPLE_GROUPS = ['Faculty', 'Scientists & postdocs', 'PhD students', 'MTech & MSc students', 'Undergraduate researchers', 'Project staff', 'Alumni'];
 export const Person = model('Person', new Schema({
   name: str(120, { required: [true, 'Name is required'] }),
   role: str(160), group: { type: String, enum: PEOPLE_GROUPS, default: 'Faculty' },
