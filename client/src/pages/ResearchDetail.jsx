@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { PageHead, Paragraphs, Loading, ErrorNote, Modal } from '../components/ui.jsx';
 import { PubItem } from './Publications.jsx';
 import { useApi } from '../lib/hooks.js';
+import { ThemeVisual } from '../components/SciMedia.jsx';
 
 export default function ResearchDetail() {
   const { id } = useParams();
@@ -30,7 +31,7 @@ export default function ResearchDetail() {
       <section className="band">
         <div className="shell rdetail">
           <div className="prose">
-            {t.image && <img className="rdetail__img" src={t.image} alt="" />}
+            <ThemeVisual thrust={t} className="rdetail__fig" caption={!t.image} />
             {t.details ? <Paragraphs text={t.details} /> : <p className="rdetail__summary">{t.summary}</p>}
           </div>
           <aside className="rdetail__side">

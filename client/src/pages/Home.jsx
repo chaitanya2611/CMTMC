@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { DisciplineTag, Avatar, Paragraphs, DateBlock, ExternalLink } from '../components/ui.jsx';
+import { HeroMedia, MotionToggle, HERO_CREDIT, ThemeVisual, Workflow } from '../components/SciMedia.jsx';
 import { useApi, useSite, useTitle, fmtDate } from '../lib/hooks.js';
 
 const isPlaceholder = (txt) => /^\[/.test((txt || '').trim());
@@ -25,30 +26,32 @@ export default function Home() {
   const featured = realPubs.filter((p) => p.featured).slice(0, 3);
   const recent = realPubs.slice(0, 5);
   const realNews = (news.data || []).filter((n) => !isPlaceholder(n.title));
-  const leadImage = (thrusts.data || []).find((t) => t.image);
   const name = s?.name || 'Centre for Machine Learning–Driven Traditional Medicine and Catalysis';
 
   return (
     <>
-      {/* 1. Hero */}
+      {/* 1. Hero: rendered molecular-modelling loop behind a dark veil */}
       <section className="hero">
-        <div className="shell hero__grid">
-          <div>
-            <p className="hero__eyebrow">Indian Institute of Technology Bombay</p>
-            <h1 className="hero__title">{name}</h1>
-            {s?.heroText && <p className="hero__text">{s.heroText}</p>}
-            <div className="hero__actions">
-              <Link className="btn btn--primary" to="/research">Explore research</Link>
-              <Link className="btn btn--line" to="/about">About CMTMC</Link>
-            </div>
+        <HeroMedia />
+        <div className="hero__veil" aria-hidden="true" />
+        <div className="shell hero__inner">
+          <p className="hero__eyebrow">Indian Institute of Technology Bombay</p>
+          <h1 className="hero__title">{name}</h1>
+          {s?.heroText && <p className="hero__text">{s.heroText}</p>}
+          <div className="hero__actions">
+            <Link className="btn btn--light" to="/research">Explore research</Link>
+            <Link className="btn btn--ghost" to="/about">About CMTMC</Link>
           </div>
-          <aside className="hero__aside">
-            {leadImage && (
-              <figure className="hero__fig">
-                <img src={leadImage.image} alt="" />
-                <figcaption>{leadImage.title}</figcaption>
-              </figure>
-            )}
+        </div>
+        <div className="shell hero__foot">
+          <p className="hero__credit">{HERO_CREDIT}</p>
+          <MotionToggle />
+        </div>
+      </section>
+
+      {(thrusts.data?.length > 0 || departments.length > 0) && (
+        <section className="glance-strip" aria-label="At a glance">
+          <div className="shell glance-strip__grid">
             {thrusts.data?.length > 0 && (
               <div className="glance">
                 <h2>Research themes</h2>
@@ -61,9 +64,9 @@ export default function Home() {
                 <ul>{departments.map((d) => <li key={d}>{d}</li>)}</ul>
               </div>
             )}
-          </aside>
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
       {/* 2. About */}
       {(s?.about || s?.mission) && (
@@ -82,6 +85,18 @@ export default function Home() {
         </section>
       )}
 
+      {/* Research workflow: the visual story of the centre's pipeline */}
+      <section className="band band--dark">
+        <div className="shell">
+          <div className="band__head">
+            <p className="kicker">Research workflow</p>
+            <h2>From traditional knowledge to tested molecules</h2>
+            <p>Natural compounds are converted into molecular data, computational and machine-learning methods screen them against biological targets, and promising interactions are investigated for therapeutic discovery.</p>
+          </div>
+          <Workflow />
+        </div>
+      </section>
+
       {/* 3. Research */}
       {thrusts.data?.length > 0 && (
         <section className="band band--white">
@@ -92,7 +107,7 @@ export default function Home() {
             </div>
             <ol className="themes">
               {thrusts.data.map((t, i) => (
-                <li key={t._id} className={`theme${t.image ? ' theme--img' : ''}`}>
+                <li key={t._id} className="theme theme--img">
                   <span className="theme__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
                   <div>
                     <h3><Link to={`/research/${t._id}`}>{t.title}</Link></h3>
@@ -102,7 +117,7 @@ export default function Home() {
                     <p>{t.summary}</p>
                     <Link className="more" to={`/research/${t._id}`} aria-label={`Learn more about ${t.title}`}>Learn more</Link>
                   </div>
-                  {t.image && <div className="theme__img"><img src={t.image} alt="" loading="lazy" /></div>}
+                  <ThemeVisual thrust={t} className="theme__img" />
                 </li>
               ))}
             </ol>

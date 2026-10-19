@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { PageHead, DisciplineTag, ExternalLink, Loading, ErrorNote, Empty } from '../components/ui.jsx';
 import { useApi } from '../lib/hooks.js';
+import { ThemeVisual, Workflow } from '../components/SciMedia.jsx';
 
 export default function Research() {
   const thrusts = useApi('/thrusts');
@@ -16,7 +17,7 @@ export default function Research() {
           {thrusts.data?.length > 0 && (
             <ol className="themes">
               {thrusts.data.map((t, i) => (
-                <li key={t._id} className={`theme${t.image ? ' theme--img' : ''}`}>
+                <li key={t._id} className="theme theme--img">
                   <span className="theme__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
                   <div>
                     <h2 className="theme__h"><Link to={`/research/${t._id}`}>{t.title}</Link></h2>
@@ -27,11 +28,21 @@ export default function Research() {
                     {t.keywords?.length > 0 && <ul className="keywords" style={{ marginTop: 12 }}>{t.keywords.map((k) => <li key={k}>{k}</li>)}</ul>}
                     <Link className="more" to={`/research/${t._id}`} aria-label={`Read more about ${t.title}`}>Read more</Link>
                   </div>
-                  {t.image && <div className="theme__img"><img src={t.image} alt="" loading="lazy" /></div>}
+                  <ThemeVisual thrust={t} className="theme__img" />
                 </li>
               ))}
             </ol>
           )}
+        </div>
+      </section>
+
+      <section className="band band--dark">
+        <div className="shell">
+          <div className="band__head">
+            <p className="kicker">How the programmes connect</p>
+            <h2>Research workflow</h2>
+          </div>
+          <Workflow />
         </div>
       </section>
 

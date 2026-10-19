@@ -1,0 +1,586 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>studio</title>
+<style>html,body{margin:0;background:#0A1524}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js"}}</script>
+</head><body>
+<script type="module">
+import * as THREE from 'three';
+
+const P = new URLSearchParams(location.search);
+const W = +P.get('w') || 1920, H = +P.get('h') || 1080;
+const SCENE = P.get('scene') || 'hero';
+const T = +P.get('T') || 24;
+const TAU = Math.PI * 2;
+
+const C = {
+  bg: 0x0A1524, teal: 0x4FA3B5, cyan: 0x9AD7E4, dot: 0x8DB9CC, green: 0x8DBF7E, leaf: 0x7FAE6E,
+  amber: 0xD8A650, coral: 0xE07C63, blue: 0x7FA5DA, steel: 0x8E9DB0, white: 0xE8EEF4,
+};
+const EL = { C: C.green, O: C.coral, N: C.blue, P: C.amber, S: 0xE6CF6A, FE: C.amber };
+const ELP = { C: 0xA9B6C6, O: 0xD9826E, N: 0x86A8DA, S: 0xE0C866 }; // protein atoms: neutral carbon
+
+// ---------- helpers ----------
+function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const ease = (x) => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
+const v3 = (a) => new THREE.Vector3(a[0], a[1], a[2]);
+async function J(name) { return (await fetch(`data/${name}.json`)).json(); }
+
+function pointsMaterial({ color = C.dot, size = 1, opacity = 0.6, near = 60, far = 260, glowColor = C.cyan }) {
+  return new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false,
+    uniforms: {
+      uColor: { value: new THREE.Color(color) }, uGlowColor: { value: new THREE.Color(glowColor) },
+      uSize: { value: size }, uScale: { value: H / (2 * Math.tan(THREE.MathUtils.degToRad(15))) }, uOpacity: { value: opacity },
+      uNear: { value: near }, uFar: { value: far },
+      uGlowAt: { value: new THREE.Vector3(9999, 0, 0) }, uGlow: { value: 0 }, uGlowR: { value: 12 },
+    },
+    vertexShader: `
+      uniform float uSize, uScale, uOpacity, uNear, uFar, uGlow, uGlowR; uniform vec3 uGlowAt;
+      attribute float aAlpha; varying float vA; varying float vG;
+      void main(){
+        vec4 mv = modelViewMatrix * vec4(position,1.0);
+        gl_Position = projectionMatrix * mv;
+        gl_PointSize = max(1.0, uSize * uScale / -mv.z);
+        float depth = smoothstep(uFar, uNear, -mv.z);
+        vG = uGlow * smoothstep(uGlowR, uGlowR*0.25, distance(position, uGlowAt));
+        vA = aAlpha * uOpacity * (0.25 + 0.75*depth);
+      }`,
+    fragmentShader: `
+      uniform vec3 uColor, uGlowColor; varying float vA; varying float vG;
+      void main(){
+        float d = length(gl_PointCoord - 0.5);
+        float a = smoothstep(0.5, 0.15, d) * (vA + vG*0.6);
+        gl_FragColor = vec4(mix(uColor, uGlowColor, clamp(vG,0.0,1.0)), a);
+      }`,
+  });
+}
+function makePoints(arr, opts) {
+  const g = new THREE.BufferGeometry();
+  const pos = arr instanceof Float32Array ? arr : new Float32Array(arr);
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const n = pos.length / 3;
+  const al = new Float32Array(n); const r = rng(opts.seed || 3);
+  for (let i = 0; i < n; i++) al[i] = 0.55 + 0.45 * r();
+  g.setAttribute('aAlpha', new THREE.BufferAttribute(al, 1));
+  return new THREE.Points(g, pointsMaterial(opts));
+}
+
+function tube(ca, { radius = 0.42, c1 = C.teal, c2 = C.blue, opacity = 1, rough = 0.5 }) {
+  const grp = new THREE.Group();
+  const segs = []; let cur = [];
+  for (let i = 0; i < ca.length; i++) {
+    if (cur.length && v3(ca[i]).distanceTo(v3(ca[i - 1])) > 4.3) { segs.push(cur); cur = []; }
+    cur.push(v3(ca[i]));
+  }
+  segs.push(cur);
+  let done = 0; const total = ca.length;
+  const col1 = new THREE.Color(c1), col2 = new THREE.Color(c2);
+  for (const s of segs) {
+    if (s.length < 2) { done += s.length; continue; }
+    const curve = new THREE.CatmullRomCurve3(s, false, 'centripetal');
+    const tub = s.length * 6, rad = 10;
+    const g = new THREE.TubeGeometry(curve, tub, radius, rad, false);
+    const cols = new Float32Array(g.attributes.position.count * 3);
+    for (let i = 0; i <= tub; i++) {
+      const u = (done + (i / tub) * s.length) / total;
+      const c = col1.clone().lerp(col2, u);
+      for (let j = 0; j <= rad; j++) { const k = (i * (rad + 1) + j) * 3; cols[k] = c.r; cols[k + 1] = c.g; cols[k + 2] = c.b; }
+    }
+    g.setAttribute('color', new THREE.BufferAttribute(cols, 3));
+    const m = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: rough, metalness: 0.05, transparent: opacity < 1, opacity });
+    grp.add(new THREE.Mesh(g, m));
+    done += s.length;
+  }
+  return grp;
+}
+
+
+// secondary-structure cartoon: helices and strands as ribbons (width along the C=O direction), coils as tubes
+const SSC = { H: 0x5FB3C0, E: 0x86A2DE, C: 0x8C9DB2 };
+function cartoon(res, { colors = SSC, opacity = 1 } = {}) {
+  const segs = []; let cur = [];
+  res.forEach((r, i) => { if (cur.length && v3(r.ca).distanceTo(v3(res[i - 1].ca)) > 4.3) { segs.push(cur); cur = []; } cur.push(r); });
+  segs.push(cur);
+  const pos = [], col = [], idx = []; const M = 14, S = 8;
+  const prof = (r, nxt, f) => {
+    if (r.ss === 'E' && (!nxt || nxt.ss !== 'E')) return [2.7 * (1 - f) + 0.38 * f, 0.4];
+    if (r.ss === 'H') return [1.55, 0.34];
+    if (r.ss === 'E') return [1.75, 0.4];
+    return [0.38, 0.38];
+  };
+  for (const seg of segs) {
+    if (seg.length < 3) continue;
+    const curve = new THREE.CatmullRomCurve3(seg.map((r) => v3(r.ca)), false, 'centripetal');
+    let prev = null; const nr = seg.map((r) => { const n = v3(r.o); if (prev && n.dot(prev) < 0) n.negate(); prev = n; return n; });
+    const N = (seg.length - 1) * S; const base = pos.length / 3;
+    for (let k = 0; k <= N; k++) {
+      const u = k / N; const p = curve.getPoint(u); const tg = curve.getTangent(u);
+      const f = u * (seg.length - 1); const i = Math.min(seg.length - 2, Math.floor(f)); const fr = f - i;
+      const w = nr[i].clone().lerp(nr[i + 1], fr); w.sub(tg.clone().multiplyScalar(w.dot(tg))).normalize();
+      const b = tg.clone().cross(w).normalize();
+      const pa = prof(seg[i], seg[i + 1], fr); const pb = prof(seg[i + 1], seg[i + 2], 0);
+      const arrow = seg[i].ss === 'E' && seg[i + 1].ss !== 'E';
+      const sm = arrow ? 0 : fr * fr * (3 - 2 * fr);
+      const wid = arrow ? pa[0] : pa[0] + (pb[0] - pa[0]) * sm, th = pa[1] + (pb[1] - pa[1]) * sm;
+      const ca = new THREE.Color(colors[seg[i].ss]).lerp(new THREE.Color(colors[seg[i + 1].ss]), sm);
+      for (let m = 0; m < M; m++) {
+        const th0 = (m / M) * TAU; const cx = Math.cos(th0), sy = Math.sin(th0);
+        const ex = Math.sign(cx) * Math.pow(Math.abs(cx), 0.7), ey = Math.sign(sy) * Math.pow(Math.abs(sy), 0.7);
+        const q = p.clone().add(w.clone().multiplyScalar(ex * wid / 2)).add(b.clone().multiplyScalar(ey * th / 2));
+        pos.push(q.x, q.y, q.z); col.push(ca.r, ca.g, ca.b);
+      }
+      if (k > 0) for (let m = 0; m < M; m++) { const a = base + (k - 1) * M + m, b2 = base + (k - 1) * M + (m + 1) % M, c = a + M, d = b2 + M; idx.push(a, c, b2, b2, c, d); }
+    }
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+  g.setIndex(idx); g.computeVertexNormals();
+  return new THREE.Mesh(g, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.45, metalness: 0.05, transparent: opacity < 1, opacity, side: THREE.DoubleSide }));
+}
+
+const sphG = new THREE.SphereGeometry(1, 20, 14);
+const cylG = new THREE.CylinderGeometry(1, 1, 1, 10, 1, true);
+function ballStick(atoms, bonds, { atomR = 0.34, bondR = 0.13, palette = EL, opacity = 1, emissive = 0 }) {
+  const grp = new THREE.Group(); const mats = {};
+  const mat = (c) => mats[c] || (mats[c] = new THREE.MeshStandardMaterial({ color: c, roughness: 0.4, metalness: 0.05, transparent: true, opacity, emissive: c, emissiveIntensity: emissive }));
+  const pos = atoms.map((a) => v3(a.p));
+  atoms.forEach((a, i) => { const m = new THREE.Mesh(sphG, mat(palette[a.el] ?? C.white)); m.position.copy(pos[i]); m.scale.setScalar(atomR * (a.el === 'C' ? 1 : 1.05)); grp.add(m); });
+  const up = new THREE.Vector3(0, 1, 0);
+  for (const [i, j] of bonds) {
+    const a = pos[i], b = pos[j], mid = a.clone().add(b).multiplyScalar(0.5);
+    for (const [p, q, el] of [[a, mid, atoms[i].el], [mid, b, atoms[j].el]]) {
+      const d = q.clone().sub(p); const m = new THREE.Mesh(cylG, mat(palette[el] ?? C.white));
+      m.position.copy(p.clone().add(q).multiplyScalar(0.5)); m.scale.set(bondR, d.length(), bondR);
+      m.quaternion.setFromUnitVectors(up, d.normalize()); grp.add(m);
+    }
+  }
+  grp.userData.mats = Object.values(mats);
+  grp.userData.setOpacity = (o) => grp.userData.mats.forEach((m) => { m.opacity = o * opacity; m.visible = o > 0.003; });
+  return grp;
+}
+function molAtoms(mol, key = 'p', scale = 1) { return mol.el.map((el, i) => ({ el, p: mol[key][i].length === 2 ? [mol[key][i][0] * scale, mol[key][i][1] * scale, 0] : mol[key][i].map((v) => v * scale) })); }
+function wire(mol, { color = C.dot, opacity = 0.3, scale = 1 }) {
+  const pts = [];
+  for (const [i, j] of mol.b) { pts.push(...mol.p[i].map((v) => v * scale), ...mol.p[j].map((v) => v * scale)); }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
+  const m = new THREE.LineBasicMaterial({ color, transparent: true, opacity, depthWrite: false });
+  return new THREE.LineSegments(g, m);
+}
+let glowTex;
+function glowSprite(color, size, opacity = 0.8) {
+  if (!glowTex) {
+    const c = document.createElement('canvas'); c.width = c.height = 128; const x = c.getContext('2d');
+    const gr = x.createRadialGradient(64, 64, 0, 64, 64, 64); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.25, 'rgba(255,255,255,0.45)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+    x.fillStyle = gr; x.fillRect(0, 0, 128, 128); glowTex = new THREE.CanvasTexture(c);
+  }
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color, transparent: true, opacity, depthWrite: false, blending: THREE.AdditiveBlending }));
+  s.scale.setScalar(size); return s;
+}
+
+// a sparse data/graph network with particles travelling along edges (seamless over T)
+function network({ n = 140, x = [-160, 160], y = [-90, 90], z = [-110, -50], k = 3, seed = 11, color = C.teal, lineOpacity = 0.12, particles = 50, cycles = [1, 2], pColor = C.cyan, nodeSize = 0.55, pSize = 0.9 }) {
+  const r = rng(seed); const nodes = [];
+  for (let i = 0; i < n; i++) nodes.push(new THREE.Vector3(x[0] + r() * (x[1] - x[0]), y[0] + r() * (y[1] - y[0]), z[0] + r() * (z[1] - z[0])));
+  const edges = []; const seen = new Set();
+  nodes.forEach((a, i) => {
+    nodes.map((b, j) => [a.distanceTo(b), j]).sort((p, q) => p[0] - q[0]).slice(1, k + 1).forEach(([, j]) => {
+      const key = i < j ? `${i}-${j}` : `${j}-${i}`; if (!seen.has(key)) { seen.add(key); edges.push([i, j]); }
+    });
+  });
+  const grp = new THREE.Group();
+  const lp = []; edges.forEach(([i, j]) => lp.push(nodes[i].x, nodes[i].y, nodes[i].z, nodes[j].x, nodes[j].y, nodes[j].z));
+  const lg = new THREE.BufferGeometry(); lg.setAttribute('position', new THREE.Float32BufferAttribute(lp, 3));
+  grp.add(new THREE.LineSegments(lg, new THREE.LineBasicMaterial({ color, transparent: true, opacity: lineOpacity, depthWrite: false })));
+  const np = []; nodes.forEach((v) => np.push(v.x, v.y, v.z));
+  grp.add(makePoints(np, { color, size: nodeSize, opacity: 0.55, near: 80, far: 320 }));
+  const ps = []; for (let i = 0; i < particles; i++) ps.push({ e: edges[Math.floor(r() * edges.length)], off: r(), cyc: cycles[Math.floor(r() * cycles.length)], dir: r() < 0.5 });
+  const pg = makePoints(new Float32Array(particles * 3), { color: pColor, size: pSize, opacity: 0.9, near: 80, far: 320, seed: 5 });
+  grp.add(pg);
+  grp.userData.update = (t) => {
+    const a = pg.geometry.attributes.position;
+    ps.forEach((p, i) => {
+      const u = ((t / T) * p.cyc + p.off) % 1; const s = p.dir ? u : 1 - u;
+      const A = nodes[p.e[0]], B = nodes[p.e[1]];
+      a.setXYZ(i, A.x + (B.x - A.x) * s, A.y + (B.y - A.y) * s, A.z + (B.z - A.z) * s);
+    });
+    a.needsUpdate = true;
+  };
+  return grp;
+}
+
+function lights(scene, { key = 1.7, rim = 1.1 } = {}) {
+  scene.add(new THREE.HemisphereLight(0xA9CFE0, 0x0A1524, 0.55));
+  const k = new THREE.DirectionalLight(0xFFFFFF, key); k.position.set(-1, 1.3, 1.2); scene.add(k);
+  const r = new THREE.DirectionalLight(0x7CC6D8, rim); r.position.set(1.2, 0.2, -1.4); scene.add(r);
+  const f = new THREE.DirectionalLight(0x9DB4D0, 0.35); f.position.set(0.3, -1, 0.8); scene.add(f);
+}
+
+// PCA frame of a point set (for aligning a ligand onto the crystallographic pose)
+function pcaBasis(pts) {
+  const c = pts.reduce((a, p) => a.add(p.clone()), new THREE.Vector3()).multiplyScalar(1 / pts.length);
+  const m = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+  pts.forEach((p) => { const d = [p.x - c.x, p.y - c.y, p.z - c.z]; for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) m[i][j] += d[i] * d[j]; });
+  // power iteration for two leading axes
+  const pow = (M, skip) => { let v = new THREE.Vector3(1, 0.3, 0.2); for (let it = 0; it < 60; it++) { let w = new THREE.Vector3(M[0][0] * v.x + M[0][1] * v.y + M[0][2] * v.z, M[1][0] * v.x + M[1][1] * v.y + M[1][2] * v.z, M[2][0] * v.x + M[2][1] * v.y + M[2][2] * v.z); if (skip) w.sub(skip.clone().multiplyScalar(w.dot(skip))); v = w.normalize(); } return v; };
+  const e1 = pow(m); const e2 = pow(m, e1); const e3 = e1.clone().cross(e2);
+  return { c, mat: new THREE.Matrix4().makeBasis(e1, e2, e3) };
+}
+
+// ---------- 2D canvas: fluorescence-microscopy-like cell field ----------
+function cellsScene() {
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H; const x = cv.getContext('2d');
+  const r = rng(21);
+  const noise = (a, s) => Math.sin(a * 3 + s) * 0.06 + Math.sin(a * 5 + s * 1.7) * 0.04 + Math.sin(a * 9 + s * 2.3) * 0.02;
+  const cells = [];
+  for (let i = 0; i < 70 && cells.length < 16; i++) {
+    const c = { x: r() * W, y: r() * H, R: (0.09 + r() * 0.06) * Math.min(W, H), s: r() * 10, rot: r() * TAU, e: 0.75 + r() * 0.25 };
+    if (cells.every((o) => Math.hypot(o.x - c.x, o.y - c.y) > (o.R + c.R) * 0.95)) cells.push(c);
+  }
+  function blob(c, k, f) { x.beginPath(); for (let i = 0; i <= 90; i++) { const a = (i / 90) * TAU; const rr = c.R * k * (1 + noise(a, c.s + f)); const px = Math.cos(a) * rr, py = Math.sin(a) * rr * c.e; x.lineTo(c.x + px * Math.cos(c.rot) - py * Math.sin(c.rot), c.y + px * Math.sin(c.rot) + py * Math.cos(c.rot)); } x.closePath(); }
+  return {
+    canvas: cv,
+    render(t) {
+      x.fillStyle = '#060E18'; x.fillRect(0, 0, W, H);
+      x.globalCompositeOperation = 'lighter';
+      for (const c of cells) {
+        // cytoplasm (green channel) with filament texture
+        const g = x.createRadialGradient(c.x, c.y, c.R * 0.2, c.x, c.y, c.R * 1.1);
+        g.addColorStop(0, 'rgba(70,150,110,0.32)'); g.addColorStop(0.75, 'rgba(60,140,100,0.22)'); g.addColorStop(1, 'rgba(60,140,100,0)');
+        blob(c, 1, 0); x.fillStyle = g; x.fill();
+        blob(c, 1, 0); x.strokeStyle = 'rgba(120,200,150,0.16)'; x.lineWidth = 1; x.stroke();
+        x.save(); blob(c, 1, 0); x.clip();
+        const rr = rng(Math.floor(c.s * 1000));
+        for (let f = 0; f < 34; f++) { const a = rr() * TAU, l = c.R * (0.6 + rr() * 0.8); const ox = c.x + (rr() - 0.5) * c.R, oy = c.y + (rr() - 0.5) * c.R; x.beginPath(); x.moveTo(ox, oy); x.quadraticCurveTo(ox + Math.cos(a + 0.4) * l * 0.5, oy + Math.sin(a + 0.4) * l * 0.5, ox + Math.cos(a) * l, oy + Math.sin(a) * l); x.strokeStyle = 'rgba(110,190,140,0.07)'; x.lineWidth = 1; x.stroke(); }
+        // mitochondria-like puncta (red channel, restrained)
+        for (let f = 0; f < 18; f++) { const a = rr() * TAU, d = c.R * (0.35 + rr() * 0.5); x.beginPath(); x.ellipse(c.x + Math.cos(a) * d, c.y + Math.sin(a) * d * c.e, 3 + rr() * 4, 1.5 + rr() * 1.5, a, 0, TAU); x.fillStyle = 'rgba(200,110,90,0.22)'; x.fill(); }
+        x.restore();
+        // nucleus (blue channel)
+        const n = { ...c, R: c.R * 0.42, s: c.s + 3 };
+        const gn = x.createRadialGradient(c.x, c.y, 0, c.x, c.y, n.R * 1.1);
+        gn.addColorStop(0, 'rgba(90,130,220,0.75)'); gn.addColorStop(0.8, 'rgba(70,110,210,0.55)'); gn.addColorStop(1, 'rgba(60,100,200,0)');
+        blob(n, 1, 1); x.fillStyle = gn; x.fill();
+        for (let f = 0; f < 6; f++) { x.beginPath(); x.arc(c.x + (rr() - 0.5) * n.R, c.y + (rr() - 0.5) * n.R * 0.8, n.R * (0.08 + rr() * 0.1), 0, TAU); x.fillStyle = 'rgba(140,170,240,0.25)'; x.fill(); }
+      }
+      x.globalCompositeOperation = 'source-over';
+      // scale bar
+      x.fillStyle = 'rgba(232,238,244,0.7)'; x.fillRect(W - 0.06 * W - 0.12 * W, H - 0.07 * H, 0.12 * W, Math.max(3, H * 0.006));
+    },
+  };
+}
+
+// ---------- scenes ----------
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(W, H);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.18;
+
+async function build(name) {
+  if (name === 'cells') { const s = cellsScene(); document.body.appendChild(s.canvas); return { canvas: s.canvas, render: s.render }; }
+  document.body.appendChild(renderer.domElement);
+  const scene = new THREE.Scene(); scene.background = new THREE.Color(C.bg);
+  scene.fog = new THREE.Fog(C.bg, 140, 360);
+  const cam = new THREE.PerspectiveCamera(30, W / H, 1, 800);
+  lights(scene);
+  const upd = [];
+
+  if (name === 'hero' || name === 'target' || name === 'dock') {
+    const kin = await J('kinase'); const mols = await J('mols');
+    const prot = new THREE.Group(); scene.add(prot);
+    prot.add(cartoon(kin.res));
+    const surf = makePoints(kin.surf, { color: C.dot, size: name === 'dock' ? 0.28 : 0.42, opacity: name === 'dock' ? 0.32 : 0.42, near: 60, far: 260 });
+    surf.material.uniforms.uGlowAt.value = v3(kin.pocket);
+    prot.add(surf);
+    const pocket = ballStick(kin.pocketAtoms, kin.pocketBonds, { atomR: 0.2, bondR: 0.11, palette: ELP, opacity: 0.85 });
+    prot.add(pocket);
+    // ligand: quercetin aligned onto the crystallographic ATP-site pose (illustrative)
+    const q = mols.quercetin; const qAtoms = molAtoms(q);
+    const lig = ballStick(qAtoms, q.b.map((b) => [b[0], b[1]]), { atomR: 0.46, bondR: 0.19, emissive: 0.22 });
+    const A = pcaBasis(kin.lig.map((a) => v3(a.p))); const B = pcaBasis(qAtoms.map((a) => v3(a.p)));
+    const R = A.mat.clone().multiply(B.mat.clone().transpose());
+    const finalQ = new THREE.Quaternion().setFromRotationMatrix(R);
+    const finalP = A.c.clone();
+    const ligWrap = new THREE.Group(); ligWrap.add(lig); (SCENE === 'hero' ? scene : prot).add(ligWrap);
+    const halo = glowSprite(C.green, 16, 0); ligWrap.add(halo);
+    // contacts in the final pose
+    const posed = qAtoms.map((a) => v3(a.p).applyQuaternion(finalQ).add(finalP));
+    const pairs = [];
+    qAtoms.forEach((a, i) => { if (a.el !== 'O') return; kin.pocketAtoms.forEach((b) => { if (b.el === 'O' || b.el === 'N') { const d = posed[i].distanceTo(v3(b.p)); if (d < 4.2) pairs.push([d, posed[i], v3(b.p)]); } }); });
+    pairs.sort((a, b) => a[0] - b[0]);
+    const hb = new THREE.Group(); prot.add(hb);
+    const hbMat = new THREE.LineDashedMaterial({ color: C.amber, dashSize: 0.35, gapSize: 0.25, transparent: true, opacity: 0, depthWrite: false });
+    pairs.slice(0, 4).forEach(([, a, b]) => { const g = new THREE.BufferGeometry().setFromPoints([a, b]); const l = new THREE.Line(g, hbMat); l.computeLineDistances(); hb.add(l); });
+    const outward = v3(kin.pocket).normalize();
+    const start = finalP.clone().add(outward.clone().multiplyScalar(34)).add(new THREE.Vector3(-14, 12, 10));
+    const ctrl = finalP.clone().add(outward.clone().multiplyScalar(16)).add(new THREE.Vector3(6, 14, 4));
+    const tumble = new THREE.Quaternion().setFromEuler(new THREE.Euler(2.1, -1.3, 0.7));
+
+    if (name === 'hero') {
+      prot.position.set(28, -6, 0);
+      cam.position.set(0, 4, 162); cam.lookAt(6, 0, 0);
+      const net = network({ lineOpacity: 0.085 }); scene.add(net); upd.push(net.userData.update);
+      const net2 = network({ n: 60, x: [-150, 20], y: [-80, 80], z: [-40, 10], seed: 4, lineOpacity: 0.06, particles: 18, nodeSize: 0.45, pSize: 0.7 });
+      scene.add(net2); upd.push(net2.userData.update);
+      // background phytochemicals drifting in depth
+      const names = ['curcumin', 'berberine', 'artemisinin', 'withaferinA', 'piperine'];
+      const r = rng(9);
+      names.forEach((nm, i) => {
+        const w = wire(mols[nm], { color: i % 2 ? C.dot : 0x9CC79A, opacity: 0.22 + r() * 0.1, scale: 1.6 });
+        const base = new THREE.Vector3(-120 + i * 34 + r() * 10, -55 + r() * 110, -70 + r() * 50);
+        const ax = new THREE.Vector3(r() - 0.5, r() - 0.5, r() - 0.5).normalize(); const ph = r() * TAU;
+        scene.add(w);
+        upd.push((t) => { const a = TAU * t / T; w.position.set(base.x + 4 * Math.sin(a + ph), base.y + 3 * Math.cos(a + ph), base.z); w.quaternion.setFromAxisAngle(ax, ph + a); });
+      });
+    } else if (name === 'target') {
+      cam.position.set(0, 4, 128); cam.lookAt(0, 0, 0);
+      const net = network({ n: 70, particles: 0, lineOpacity: 0.08 }); scene.add(net);
+    } else {
+      // close-up of the binding pocket
+      const pc = finalP.clone();
+      cam.position.copy(pc.clone().add(outward.clone().multiplyScalar(52)).add(new THREE.Vector3(6, 10, 0))); cam.lookAt(pc);
+      scene.fog = new THREE.Fog(C.bg, 40, 95);
+      surf.material.uniforms.uNear.value = 30; surf.material.uniforms.uFar.value = 90;
+    }
+
+    upd.push((t) => {
+      const a = TAU * t / T;
+      if (name !== 'dock') { prot.rotation.set(0.12 * Math.sin(a + 1.1) - 0.15, -0.6 + 0.42 * Math.sin(a), 0.04 * Math.cos(a)); }
+      const u = (t / T) % 1;
+      let pos, quat = finalQ.clone(), op = 1, bound = 0;
+      if (name === 'hero') {
+        prot.updateMatrixWorld(true);
+        const s = ease(clamp((u - 0.04) / 0.42));
+        const p2 = prot.localToWorld(finalP.clone());
+        const p0 = new THREE.Vector3(-8, 19, 40), p1 = new THREE.Vector3(8, 17, 26);
+        pos = p0.clone().multiplyScalar((1 - s) * (1 - s)).add(p1.clone().multiplyScalar(2 * (1 - s) * s)).add(p2.clone().multiplyScalar(s * s));
+        quat = prot.quaternion.clone().multiply(finalQ).multiply(tumble.clone().slerp(new THREE.Quaternion(), s));
+        op = smooth(0.0, 0.07, u) * (1 - smooth(0.86, 0.96, u));
+        bound = smooth(0.44, 0.52, u) * (1 - smooth(0.84, 0.93, u));
+        halo.material.opacity = 0.22 * op * (1 - 0.6 * bound);
+        pos.add(new THREE.Vector3(Math.sin(a * 7) * 0.12, Math.cos(a * 9) * 0.1, Math.sin(a * 5 + 1) * 0.1).multiplyScalar(bound));
+      } else { pos = finalP.clone(); bound = name === 'dock' ? 1 : 0; op = name === 'dock' ? 1 : 0; }
+      ligWrap.position.copy(pos); ligWrap.quaternion.copy(quat); lig.userData.setOpacity(op);
+      hbMat.opacity = 0.9 * bound;
+      surf.material.uniforms.uGlow.value = 0.55 * bound;
+      pocket.userData.setOpacity(name === 'dock' ? 1 : 0.15 + 0.7 * bound);
+    });
+  }
+
+  if (name === 'enz') {
+    const enz = await J('enzyme'); const mols = await J('mols');
+    const prot = new THREE.Group(); scene.add(prot);
+    prot.add(cartoon(enz.res, { colors: { H: 0x7DB88E, E: 0x86A2DE, C: 0x8C9DB2 } }));
+    const surf = makePoints(enz.surf, { color: C.dot, size: 0.5, opacity: 0.35, near: 40, far: 200 }); prot.add(surf);
+    const fe = enz.fe[0]; const site = v3(fe);
+    const feM = new THREE.Mesh(sphG, new THREE.MeshStandardMaterial({ color: C.amber, emissive: C.amber, emissiveIntensity: 0.5, roughness: 0.3 })); feM.position.copy(site); feM.scale.setScalar(0.9); prot.add(feM);
+    const glow = glowSprite(C.amber, 9, 0.5); glow.position.copy(site); prot.add(glow);
+    surf.material.uniforms.uGlowAt.value = site; surf.material.uniforms.uGlowR.value = 14;
+    const sub = ballStick(molAtoms(mols.piperine), mols.piperine.b.map((b) => [b[0], b[1]]), { atomR: 0.32, bondR: 0.13 });
+    const subW = new THREE.Group(); subW.add(sub); prot.add(subW);
+    const out = site.clone().normalize();
+    const net = network({ n: 80, particles: 20, lineOpacity: 0.08, x: [-120, 120], y: [-70, 70] }); scene.add(net); upd.push(net.userData.update);
+    cam.position.set(0, 0, 105); cam.lookAt(0, 0, 0);
+    upd.push((t) => {
+      const a = TAU * t / T, u = (t / T) % 1;
+      prot.rotation.set(0.25 + 0.1 * Math.sin(a), 0.5 * Math.sin(a), 0);
+      const s = ease(clamp(u / 0.45));
+      const p = site.clone().add(out.clone().multiplyScalar(24 - 13 * s)).add(new THREE.Vector3(10 * (1 - s), 6 * (1 - s), 0));
+      subW.position.copy(p); subW.rotation.set(a * 0.5, a, 0);
+      const op = smooth(0, 0.08, u) * (1 - smooth(0.8, 0.95, u)); sub.userData.setOpacity(op);
+      const act = smooth(0.4, 0.5, u) * (1 - smooth(0.78, 0.9, u));
+      surf.material.uniforms.uGlow.value = 0.5 * act; glow.material.opacity = 0.35 + 0.35 * act;
+    });
+  }
+
+  if (name === 'gnn' || name === 'latent') {
+    const mols = await J('mols'); const q = mols.quercetin;
+    const graph = new THREE.Group(); scene.add(graph);
+    const sc = 4.4; const atoms = molAtoms(q, 'p2', sc);
+    const gs = ballStick(atoms, q.b.map((b) => [b[0], b[1]]), { atomR: 0.95, bondR: 0.22, emissive: 0.15 });
+    graph.add(gs);
+    // BFS layers from a ring atom to drive message-passing waves
+    const adj = atoms.map(() => []); q.b.forEach(([i, j]) => { adj[i].push(j); adj[j].push(i); });
+    const layer = atoms.map(() => -1); layer[0] = 0; const qu = [0]; while (qu.length) { const i = qu.shift(); adj[i].forEach((j) => { if (layer[j] < 0) { layer[j] = layer[i] + 1; qu.push(j); } }); }
+    const maxL = Math.max(...layer);
+    const pulses = [];
+    q.b.forEach(([i, j]) => { [[i, j], [j, i]].forEach(([a, b]) => { const s = glowSprite(C.cyan, 2.4, 0); graph.add(s); pulses.push({ a: v3(atoms[a].p), b: v3(atoms[b].p), L: layer[a], s }); }); });
+    const halos = atoms.map((a) => { const s = glowSprite(EL[a.el] ?? C.white, 4.2, 0); s.position.copy(v3(a.p)); graph.add(s); return s; });
+    graph.rotation.set(-0.85, 0.25, 0.1);
+    // latent space: three clusters of embedded molecules
+    const cloud = new THREE.Group(); scene.add(cloud);
+    const r = rng(17); const cents = [[0, 0, 0, C.green], [24, 10, -8, C.teal], [10, -18, 12, C.blue]];
+    cents.forEach(([cx, cy, cz, col], k) => {
+      const pts = []; for (let i = 0; i < 260; i++) { const g = () => (r() + r() + r() - 1.5) * 9; pts.push(cx + g(), cy + g(), cz + g()); }
+      cloud.add(makePoints(pts, { color: col, size: 1.5, opacity: 0.8, near: 40, far: 240, seed: k + 2 }));
+    });
+    const hl = new THREE.Vector3(2, 3, 1);
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(2.2, 0.12, 8, 48), new THREE.MeshBasicMaterial({ color: C.amber, transparent: true, opacity: 0.9 }));
+    ring.position.copy(hl); cloud.add(ring);
+    const hlDot = glowSprite(C.amber, 5, 0.9); hlDot.position.copy(hl); cloud.add(hlDot);
+    const link = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]), new THREE.LineDashedMaterial({ color: C.amber, dashSize: 1.2, gapSize: 0.9, transparent: true, opacity: 0.55 }));
+    scene.add(link);
+    if (name === 'gnn') { graph.position.set(-12, -3, 6); cloud.position.set(33, 4, -14); cam.position.set(0, 4, 118); }
+    else { graph.visible = false; link.visible = false; cloud.position.set(-10, 0, 0); cam.position.set(0, 2, 90); }
+    cam.lookAt(0, 0, 0);
+    const net = network({ n: 60, particles: 0, lineOpacity: 0.06 }); scene.add(net);
+    upd.push((t) => {
+      const a = TAU * t / T, u = (t / T) % 1;
+      cloud.rotation.set(0.25, a / 1 * 0.5 + 0.3 * Math.sin(a), 0); // 0.5 turn? keep periodic below
+      cloud.rotation.y = 0.6 * Math.sin(a);
+      graph.rotation.z = 0.1 + 0.06 * Math.sin(a);
+      ring.lookAt(cam.position);
+      // two message-passing waves per loop
+      const w = (u * 2) % 1 * (maxL + 3);
+      pulses.forEach((p) => { const f = w - p.L; const on = f > 0 && f < 1; p.s.material.opacity = on ? Math.sin(Math.PI * f) * 0.95 : 0; if (on) p.s.position.lerpVectors(p.a, p.b, f); });
+      halos.forEach((h, i) => { const f = w - layer[i]; h.material.opacity = 0.45 * Math.exp(-Math.pow(f - 0.6, 2) * 3); });
+      const gw = new THREE.Vector3(); graph.getWorldPosition(gw); gw.add(new THREE.Vector3(8, 4, 0));
+      const hw = hl.clone(); cloud.localToWorld(hw);
+      link.geometry.setFromPoints([gw, hw]); link.computeLineDistances();
+      link.material.opacity = 0.2 + 0.4 * Math.max(0, Math.sin(TAU * u * 2 - 1.2));
+    });
+  }
+
+  if (name === 'cat') {
+    // Pt(111)-like fcc slab (nearest-neighbour 2.77 A) with an adsorbed CO hopping between hollow sites
+    const d = 2.77, h = d * Math.sqrt(2 / 3);
+    const a1 = new THREE.Vector2(d, 0), a2 = new THREE.Vector2(d / 2, d * Math.sqrt(3) / 2);
+    const slab = new THREE.Group(); scene.add(slab);
+    const metal = new THREE.MeshStandardMaterial({ color: 0x95A3B6, roughness: 0.32, metalness: 0.55 });
+    const metal2 = new THREE.MeshStandardMaterial({ color: 0x6E7D92, roughness: 0.4, metalness: 0.5 });
+    const N = 11, inst = [];
+    for (let L = 0; L < 3; L++) {
+      const off = a1.clone().add(a2).multiplyScalar(L / 3);
+      const m = new THREE.InstancedMesh(sphG, L === 0 ? metal : metal2, N * N); let k = 0;
+      for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+        const p = a1.clone().multiplyScalar(i - N / 2).add(a2.clone().multiplyScalar(j - N / 2)).add(off);
+        const mt = new THREE.Matrix4().compose(new THREE.Vector3(p.x, -L * h, p.y), new THREE.Quaternion(), new THREE.Vector3(1.32, 1.32, 1.32)); m.setMatrixAt(k++, mt);
+      }
+      slab.add(m);
+    }
+    // sites relative to the top-layer atom at origin
+    const fcc = a1.clone().add(a2).multiplyScalar(2 / 3), hcp = a1.clone().add(a2).multiplyScalar(1 / 3);
+    const bridge = fcc.clone().add(hcp).multiplyScalar(0.5);
+    const co = new THREE.Group();
+    const cAtom = new THREE.Mesh(sphG, new THREE.MeshStandardMaterial({ color: 0x3B4657, roughness: 0.35, emissive: 0x9AD7E4, emissiveIntensity: 0.08 })); cAtom.scale.setScalar(0.8);
+    const oAtom = new THREE.Mesh(sphG, new THREE.MeshStandardMaterial({ color: C.coral, roughness: 0.4 })); oAtom.scale.setScalar(0.74); oAtom.position.y = 1.2;
+    co.add(cAtom, oAtom); slab.add(co);
+    // energy profile panel (illustrative double well with barrier)
+    const prof = new THREE.Group(); scene.add(prof);
+    const E = (s) => 0.55 * Math.pow(Math.sin(Math.PI * s), 2) - 0.12 * s; // s in [0,1]
+    const pts = []; for (let i = 0; i <= 120; i++) { const s = i / 120; pts.push(new THREE.Vector3((s - 0.5) * 30, E(s) * 22, 0)); }
+    prof.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: C.amber, transparent: true, opacity: 0.9 })));
+    const axis = new THREE.LineBasicMaterial({ color: C.dot, transparent: true, opacity: 0.35 });
+    prof.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-16, -4, 0), new THREE.Vector3(16, -4, 0)]), axis));
+    prof.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-16, -4, 0), new THREE.Vector3(-16, 15, 0)]), axis));
+    const bar = new THREE.LineDashedMaterial({ color: C.dot, dashSize: 0.6, gapSize: 0.5, transparent: true, opacity: 0.45 });
+    const bl = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-16, 0, 0), new THREE.Vector3(0, 0, 0)]), bar); bl.computeLineDistances(); prof.add(bl);
+    const bl2 = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-16, E(0.5) * 22, 0), new THREE.Vector3(0, E(0.5) * 22, 0)]), bar); bl2.computeLineDistances(); prof.add(bl2);
+    const marker = glowSprite(C.cyan, 3.2, 1); prof.add(marker);
+    const mk = new THREE.Mesh(sphG, new THREE.MeshBasicMaterial({ color: C.cyan })); mk.scale.setScalar(0.5); prof.add(mk);
+    prof.position.set(6, 10, -12); prof.rotation.x = -0.3; prof.scale.setScalar(0.8);
+    slab.position.set(-4, -5, 0);
+    cam.position.set(0, 22, 60); cam.lookAt(2, 3, 0);
+    scene.fog = new THREE.Fog(C.bg, 50, 140);
+    const net = network({ n: 50, particles: 0, lineOpacity: 0.05 }); scene.add(net);
+    upd.push((t) => {
+      const a = TAU * t / T, u = (t / T) % 1;
+      slab.rotation.y = 0.35 + 0.1 * Math.sin(a);
+      // hop fcc -> hcp -> fcc, with dwell in each well
+      const go = (x) => ease(clamp(x));
+      let s; if (u < 0.5) s = go((u - 0.15) / 0.25); else s = 1 - go((u - 0.65) / 0.25);
+      const p = s < 0.5 ? fcc.clone().lerp(bridge, s * 2) : bridge.clone().lerp(hcp, (s - 0.5) * 2);
+      const lift = 1.25 + 0.45 * Math.sin(Math.PI * s);
+      const vib = 0.05 * Math.sin(a * 13);
+      co.position.set(p.x, lift + vib, p.y);
+      const mp = new THREE.Vector3((s - 0.5) * 30, E(s) * 22, 0.1); marker.position.copy(mp); mk.position.copy(mp);
+    });
+  }
+
+  if (name === 'kg' || name === 'leaf') {
+    const r = rng(31); const leafGrp = new THREE.Group(); scene.add(leafGrp);
+    const lines = []; const tips = [];
+    const mid = (s) => new THREE.Vector3(-30 + 48 * s, -18 + 30 * s + 6 * Math.sin(Math.PI * s), 0);
+    const width = (s) => 15 * Math.pow(Math.sin(Math.PI * Math.pow(s, 0.85)), 0.9);
+    // midrib
+    for (let i = 0; i < 80; i++) lines.push(mid(i / 80), mid((i + 1) / 80));
+    // outline
+    const dir = (s) => mid(Math.min(1, s + 0.01)).sub(mid(Math.max(0, s - 0.01))).normalize();
+    const nrm = (s) => { const d = dir(s); return new THREE.Vector3(-d.y, d.x, 0); };
+    for (const side of [1, -1]) for (let i = 0; i < 80; i++) { const s0 = i / 80, s1 = (i + 1) / 80; lines.push(mid(s0).add(nrm(s0).multiplyScalar(side * width(s0))), mid(s1).add(nrm(s1).multiplyScalar(side * width(s1)))); }
+    // secondary veins, curving toward the tip, with tertiary branches
+    for (let k = 1; k < 12; k++) for (const side of [1, -1]) {
+      const s0 = k / 12 + (side > 0 ? 0 : 0.03); const base = mid(s0); let p = base.clone();
+      const steps = 14; const W0 = width(s0) * 0.92;
+      for (let i = 0; i < steps; i++) {
+        const f = (i + 1) / steps; const q = mid(Math.min(1, s0 + 0.12 * f)).add(nrm(s0).multiplyScalar(side * W0 * Math.pow(f, 0.8)));
+        lines.push(p.clone(), q.clone());
+        if (i % 4 === 2) { const b = q.clone().add(new THREE.Vector3((r() - 0.5) * 3, (r() - 0.5) * 3, 0)); lines.push(q.clone(), b); }
+        p = q;
+      }
+      if (side > 0) tips.push(p.clone());
+    }
+    const lg = new THREE.BufferGeometry().setFromPoints(lines);
+    leafGrp.add(new THREE.LineSegments(lg, new THREE.LineBasicMaterial({ color: 0x86B878, transparent: true, opacity: 0.7 })));
+    const lp = []; lines.forEach((v, i) => { if (i % 2 === 0) lp.push(v.x, v.y, v.z); });
+    leafGrp.add(makePoints(lp, { color: 0x9CCB8A, size: 0.7, opacity: 0.5, near: 20, far: 200 }));
+    if (name === 'leaf') {
+      cam.position.set(0, 0, 80); cam.lookAt(-6, -2, 0); leafGrp.rotation.z = -0.15;
+      const mols = await J('mols'); const w = wire(mols.quercetin, { color: 0xBFD8C9, opacity: 0.55, scale: 1.4 }); w.position.set(20, -12, 6); scene.add(w);
+    } else {
+      leafGrp.position.set(-16, 0, 0); leafGrp.scale.setScalar(0.72); leafGrp.rotation.z = -0.1;
+      // plants -> compounds -> targets -> conditions
+      const cols = [[4, 0x8DBF7E, 'sphere'], [8, 0xE6D2A6, 'ring'], [6, 0x5FB0BE, 'sphere'], [4, 0xD08A74, 'sphere']];
+      const X = [8, 24, 40, 54]; const layers = [];
+      cols.forEach(([n, col, kind], L) => {
+        const arr = [];
+        for (let i = 0; i < n; i++) {
+          const y = (i - (n - 1) / 2) * (L === 1 ? 5 : 7.5) + (r() - 0.5) * 2; const p = new THREE.Vector3(X[L], y, (r() - 0.5) * 6);
+          let m;
+          if (kind === 'ring') { // benzene-like hexagon glyph for compounds
+            const hp = []; for (let k = 0; k <= 6; k++) { const a = k / 6 * TAU + Math.PI / 6; hp.push(new THREE.Vector3(Math.cos(a) * 1.4, Math.sin(a) * 1.4, 0)); }
+            m = new THREE.Line(new THREE.BufferGeometry().setFromPoints(hp), new THREE.LineBasicMaterial({ color: col }));
+          } else { m = new THREE.Mesh(sphG, new THREE.MeshStandardMaterial({ color: col, roughness: 0.4, emissive: col, emissiveIntensity: 0.15 })); m.scale.setScalar(L === 0 ? 1.3 : 1.1); }
+          m.position.copy(p); scene.add(m); arr.push(p);
+        }
+        layers.push(arr);
+      });
+      const edges = [];
+      for (let L = 0; L < 3; L++) layers[L].forEach((a) => { const tgt = layers[L + 1]; const k = L === 0 ? 3 : 2; for (let e = 0; e < k; e++) edges.push([a, tgt[Math.floor(r() * tgt.length)], L]); });
+      // vein tips feed the plant nodes
+      const tipW = tips.map((p) => p.clone().multiplyScalar(0.72).applyAxisAngle(new THREE.Vector3(0, 0, 1), -0.1).add(new THREE.Vector3(-16, 0, 0)));
+      tipW.forEach((p, i) => edges.push([p, layers[0][i % layers[0].length], -1]));
+      const ep = []; edges.forEach(([a, b]) => ep.push(a, b));
+      scene.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(ep), new THREE.LineBasicMaterial({ color: C.dot, transparent: true, opacity: 0.22 })));
+      const pulses = edges.map(([a, b, L]) => { const s = glowSprite(C.cyan, 2, 0); scene.add(s); return { a, b, L, s }; });
+      cam.position.set(0, 0, 118); cam.lookAt(10, 0, 0);
+      upd.push((t) => {
+        const a = TAU * t / T, u = (t / T) % 1;
+        scene.rotation.y = 0.12 * Math.sin(a);
+        const w = (u * 2) % 1 * 5.5 - 1;
+        pulses.forEach((p) => { const f = w - p.L; const on = f > 0 && f < 1; p.s.material.opacity = on ? Math.sin(Math.PI * f) * 0.9 : 0; if (on) p.s.position.lerpVectors(p.a, p.b, f); });
+      });
+    }
+  }
+
+  if (name === 'chem') {
+    const mols = await J('mols'); const m = mols.curcumin;
+    const g = ballStick(molAtoms(m), m.b.map((b) => [b[0], b[1]]), { atomR: 0.42, bondR: 0.16 }); scene.add(g);
+    g.rotation.set(0.5, 0.3, 0.15);
+    const back = wire(mols.quercetin, { color: C.dot, opacity: 0.2, scale: 2.5 }); back.position.set(-6, 2, -20); scene.add(back);
+    cam.position.set(0, 0, 33); cam.lookAt(0, 0, 0); scene.fog = new THREE.Fog(C.bg, 25, 80);
+  }
+
+  return {
+    canvas: renderer.domElement,
+    render(t) { upd.forEach((f) => f(t)); renderer.render(scene, cam); },
+  };
+}
+
+const S = await build(SCENE);
+window.frame = (t) => { S.render(t); return true; };
+window.grab = (type = 'image/png', q) => S.canvas.toDataURL(type, q);
+window.READY = true;
+S.render(+P.get('t') || 0);
+</script>
+</body></html>
