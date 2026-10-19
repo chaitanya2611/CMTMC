@@ -9,8 +9,8 @@ export default function NewsItem() {
   if (error) return <><PageHead title="News & events" /><div className="shell band"><ErrorNote error={error} onRetry={error.status === 404 ? undefined : reload} /><Link className="textlink" to="/news">Back to all news</Link></div></>;
   return (
     <>
-      <PageHead title={n.title} intro={[n.kind, fmtDate(n.date, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }), n.venue].filter(Boolean).join(', ')} />
-      <article className="band bg-lattice">
+      <PageHead crumbs={[['/news', 'News'], [null, n.title]]} title={n.title} intro={[n.kind, fmtDate(n.date, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }), n.venue].filter(Boolean).join(', ')} />
+      <article className="band">
         <div className="shell article">
           {n.image && <img className="article__img" src={n.image} alt="" />}
           <div className="prose prose--lead"><Paragraphs text={n.text} /></div>

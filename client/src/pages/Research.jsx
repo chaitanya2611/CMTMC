@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { PageHead, DisciplineTag, ExternalLink, Loading, ErrorNote, Empty, TAG_CLASS } from '../components/ui.jsx';
+import { PageHead, DisciplineTag, ExternalLink, Loading, ErrorNote, Empty } from '../components/ui.jsx';
 import { useApi } from '../lib/hooks.js';
 
 export default function Research() {
@@ -7,39 +7,45 @@ export default function Research() {
   const platforms = useApi('/platforms');
   return (
     <>
-      <PageHead kicker="Research" title="Connected programmes across biology, chemistry and AI" intro="The tag shows each programme's lead discipline; every programme draws on all three. Select one to read more." />
-      <section className="band bg-lattice">
+      <PageHead kicker="Research" title="Research" intro="The centre's programmes connect traditional-medicine knowledge, computational chemistry and machine learning. Each lists its lead discipline; all draw on the others." />
+      <section className="band">
         <div className="shell">
           {thrusts.loading && <Loading />}
           {thrusts.error && <ErrorNote error={thrusts.error} onRetry={thrusts.reload} />}
           {thrusts.data && !thrusts.data.length && <Empty>Research programmes will be listed here soon.</Empty>}
-          <div className="cards">
-            {(thrusts.data || []).map((t) => (
-              <Link key={t._id} to={`/research/${t._id}`} className="rcard">
-                {t.image ? <img className="rcard__img" src={t.image} alt="" loading="lazy" /> : <div className={`rcard__art rcard__art--${TAG_CLASS[t.tag] || 'bio'}`} aria-hidden="true" />}
-                <div className="rcard__body">
-                  <DisciplineTag tag={t.tag} />
-                  <h2 style={{ fontSize: 'var(--t-lg)' }}>{t.title}</h2>
-                  <p>{t.summary}</p>
-                  <span className="rcard__more">Read more →</span>
-                </div>
-              </Link>
-            ))}
-          </div>
+          {thrusts.data?.length > 0 && (
+            <ol className="themes">
+              {thrusts.data.map((t, i) => (
+                <li key={t._id} className={`theme${t.image ? ' theme--img' : ''}`}>
+                  <span className="theme__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                  <div>
+                    <h2 className="theme__h"><Link to={`/research/${t._id}`}>{t.title}</Link></h2>
+                    <DisciplineTag tag={t.tag} />
+                  </div>
+                  <div className="theme__desc">
+                    <p>{t.summary}</p>
+                    {t.keywords?.length > 0 && <ul className="keywords" style={{ marginTop: 12 }}>{t.keywords.map((k) => <li key={k}>{k}</li>)}</ul>}
+                    <Link className="more" to={`/research/${t._id}`} aria-label={`Read more about ${t.title}`}>Read more</Link>
+                  </div>
+                  {t.image && <div className="theme__img"><img src={t.image} alt="" loading="lazy" /></div>}
+                </li>
+              ))}
+            </ol>
+          )}
         </div>
       </section>
 
       {platforms.data?.length > 0 && (
-        <section className="band bg-cells is-dark">
+        <section className="band band--white">
           <div className="shell">
             <div className="band__head">
-              <p className="kicker">Open platforms</p>
-              <h2>Tools we build, and share</h2>
-              <p>Databases, models and tools developed at the centre.</p>
+              <p className="kicker">Resources</p>
+              <h2>Platforms and tools</h2>
+              <p>Databases, models and software developed at the centre.</p>
             </div>
             <div className="table-wrap">
               <table className="platforms">
-                <thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">What it does</th><th scope="col">Status</th></tr></thead>
+                <thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Description</th><th scope="col">Status</th></tr></thead>
                 <tbody>
                   {platforms.data.map((p) => (
                     <tr key={p._id}>

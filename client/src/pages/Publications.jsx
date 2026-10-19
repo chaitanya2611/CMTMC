@@ -5,22 +5,22 @@ import { useApi } from '../lib/hooks.js';
 export function PubItem({ p, onZoom }) {
   const href = p.link || (p.doi ? `https://doi.org/${p.doi}` : '');
   return (
-    <li className={`pub${p.featured ? ' is-featured' : ''}`}>
-      {p.image && (
-        <button type="button" className="pub__imgbtn" onClick={() => onZoom?.(p)} aria-label={`Enlarge graphical abstract: ${p.title}`}>
-          <img className="pub__img" src={p.image} alt="" loading="lazy" />
-        </button>
-      )}
+    <li className="citation">
       <div>
-        <p className="publist__title"><ExternalLink href={href}>{p.title}</ExternalLink></p>
-        {p.authors && <p className="publist__authors">{p.authors}</p>}
-        <p className="publist__venue">
+        <p className="citation__title"><ExternalLink href={href}>{p.title}</ExternalLink></p>
+        {p.authors && <p className="citation__authors">{p.authors}</p>}
+        <p className="citation__src">
           {p.venue && <cite>{p.venue}</cite>}
           {p.year && <span>{p.year}</span>}
-          {p.doi && <span className="publist__doi">doi:{p.doi}</span>}
-          {p.featured && <span className="publist__feat">Featured</span>}
+          {p.doi && <span className="citation__doi"><a href={`https://doi.org/${p.doi}`} target="_blank" rel="noreferrer">doi:{p.doi}</a></span>}
+          {p.featured && <span className="citation__feat">Featured</span>}
         </p>
       </div>
+      {p.image && (
+        <button type="button" className="citation__thumb" onClick={() => onZoom?.(p)} aria-label={`Enlarge graphical abstract: ${p.title}`}>
+          <img src={p.image} alt="" loading="lazy" />
+        </button>
+      )}
     </li>
   );
 }
@@ -45,8 +45,8 @@ export default function Publications() {
 
   return (
     <>
-      <PageHead kicker="Publications" title="Papers, with their graphical abstracts" intro="Journal articles, preprints and conference papers from the centre, newest first." />
-      <section className="band bg-lattice">
+      <PageHead kicker="Publications" title="Publications" intro="Journal articles, preprints and conference papers from the centre, listed by year." />
+      <section className="band">
         <div className="shell">
           <form className="filters" role="search" onSubmit={(e) => e.preventDefault()}>
             <label className="field">
@@ -70,7 +70,7 @@ export default function Publications() {
           {byYear.map(([y, list]) => (
             <section key={y} className="pubyear" aria-labelledby={`y-${y}`}>
               <h2 id={`y-${y}`}>{y}</h2>
-              <ol className="publist">
+              <ol className="citations">
                 {list.map((p) => <PubItem key={p._id} p={p} onZoom={setZoom} />)}
               </ol>
             </section>

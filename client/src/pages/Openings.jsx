@@ -9,8 +9,8 @@ export default function Openings() {
 
   return (
     <>
-      <PageHead title="Openings" intro={settings?.joinText} />
-      <section className="band bg-lattice">
+      <PageHead kicker="Opportunities" title="Opportunities" intro={settings?.joinText} />
+      <section className="band">
         <div className="shell">
           {loading && <Loading />}
           {error && <ErrorNote error={error} onRetry={reload} />}

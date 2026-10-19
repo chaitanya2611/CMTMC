@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { PageHead, Paragraphs, DisciplineTag, Loading, ErrorNote, Modal } from '../components/ui.jsx';
+import { PageHead, Paragraphs, Loading, ErrorNote, Modal } from '../components/ui.jsx';
 import { PubItem } from './Publications.jsx';
 import { useApi } from '../lib/hooks.js';
 
@@ -26,22 +26,20 @@ export default function ResearchDetail() {
 
   return (
     <>
-      <PageHead title={t.title} intro={t.summary}>
-        <Link className="pagehead__back" to="/research">← All research</Link>
-      </PageHead>
-      <section className="band bg-lattice">
+      <PageHead title={t.title} intro={t.summary} crumbs={[['/research', 'Research'], [null, t.title]]} />
+      <section className="band">
         <div className="shell rdetail">
           <div className="prose">
             {t.image && <img className="rdetail__img" src={t.image} alt="" />}
             {t.details ? <Paragraphs text={t.details} /> : <p className="rdetail__summary">{t.summary}</p>}
           </div>
           <aside className="rdetail__side">
-            <div><p className="kicker">Lead discipline</p><DisciplineTag tag={t.tag} /></div>
+            <div><p className="kicker">Lead discipline</p><p>{t.tag === 'AI/ML' ? 'Machine learning' : t.tag}</p></div>
             {t.keywords?.length > 0 && <div><p className="kicker">Keywords</p><ul className="keywords">{t.keywords.map((k) => <li key={k}>{k}</li>)}</ul></div>}
             {others.length > 0 && (
               <div>
                 <p className="kicker">Other programmes</p>
-                <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gap: 10 }}>
+                <ul>
                   {others.map((o) => <li key={o._id}><Link className="textlink" to={`/research/${o._id}`}>{o.title}</Link></li>)}
                 </ul>
               </div>
@@ -53,8 +51,8 @@ export default function ResearchDetail() {
       {papers.length > 0 && (
         <section className="band band--white">
           <div className="shell">
-            <div className="band__head"><p className="kicker">Representative publications</p><h2>Papers from this programme</h2></div>
-            <ol className="publist">{papers.map((p) => <PubItem key={p._id} p={p} onZoom={setZoom} />)}</ol>
+            <div className="band__head"><p className="kicker">Publications</p><h2>Representative publications</h2></div>
+            <ol className="citations">{papers.map((p) => <PubItem key={p._id} p={p} onZoom={setZoom} />)}</ol>
           </div>
         </section>
       )}

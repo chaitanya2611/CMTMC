@@ -4,14 +4,15 @@ import { useApi } from '../lib/hooks.js';
 
 const ORDER = ['Faculty', 'Scientists & postdocs', 'PhD students', 'MTech & MSc students', 'Undergraduate researchers', 'Project staff'];
 
-function Face({ p, lead, onOpen }) {
+function Person({ p, onOpen }) {
   return (
     <li>
-      <button type="button" className="face" onClick={() => onOpen(p)} aria-haspopup="dialog">
-        <span className="face__ring"><Avatar name={p.name} src={p.photo} size={lead ? 'lg' : 'md'} /></span>
-        <span className="face__name">{p.name}</span>
-        {p.role && <span className="face__role">{p.role}</span>}
-        <span className="face__bio">View bio</span>
+      <button type="button" className="person" onClick={() => onOpen(p)} aria-haspopup="dialog">
+        <span className="person__img"><Avatar name={p.name} src={p.photo} /></span>
+        <span>
+          <span className="person__name">{p.name}</span><br />
+          {p.role && <span className="person__role">{p.role}</span>}
+        </span>
       </button>
     </li>
   );
@@ -20,18 +21,20 @@ function Face({ p, lead, onOpen }) {
 function Bio({ p }) {
   return (
     <div className="bio">
-      <span className="face__ring"><Avatar name={p.name} src={p.photo} size="xl" /></span>
+      <Avatar name={p.name} src={p.photo} size="xl" />
       <div>
         <h2>{p.name}</h2>
         {p.role && <p className="bio__role">{p.role}</p>}
-        {p.group === 'Alumni' && p.currentPosition && <p className="bio__role">Now: {p.currentPosition}</p>}
-        <div className="bio__text">{p.bio ? <Paragraphs text={p.bio} /> : <p>A short bio will be added soon.</p>}</div>
-        {p.interests?.length > 0 && <ul className="keywords">{p.interests.map((k) => <li key={k}>{k}</li>)}</ul>}
-        <p className="bio__links">
-          {p.email && <a className="btn btn--forest" href={`mailto:${p.email}`}>Email</a>}
-          {p.profileLink && <a className="btn btn--line" href={p.profileLink} target="_blank" rel="noreferrer">Profile</a>}
-          {p.scholarLink && <a className="btn btn--line" href={p.scholarLink} target="_blank" rel="noreferrer">Google Scholar</a>}
-        </p>
+        {p.group === 'Alumni' && p.currentPosition && <p className="bio__role">Current position: {p.currentPosition}</p>}
+        {p.bio && <div className="bio__text"><Paragraphs text={p.bio} /></div>}
+        {p.interests?.length > 0 && <ul className="keywords" aria-label="Research interests">{p.interests.map((k) => <li key={k}>{k}</li>)}</ul>}
+        {(p.email || p.profileLink || p.scholarLink) && (
+          <p className="bio__links">
+            {p.email && <a className="btn btn--primary" href={`mailto:${p.email}`}>Email</a>}
+            {p.profileLink && <a className="btn btn--line" href={p.profileLink} target="_blank" rel="noreferrer">Profile</a>}
+            {p.scholarLink && <a className="btn btn--line" href={p.scholarLink} target="_blank" rel="noreferrer">Google Scholar</a>}
+          </p>
+        )}
       </div>
     </div>
   );
@@ -45,8 +48,8 @@ export default function People() {
 
   return (
     <>
-      <PageHead kicker="People" title="Chemists, biologists and coders in one room" intro="Select anyone to read their bio, research interests and links." />
-      <section className="band bg-network is-dark">
+      <PageHead kicker="People" title="People" intro="Faculty, researchers and students working across chemistry, biology and machine learning. Select a name for a short profile." />
+      <section className="band">
         <div className="shell">
           {loading && <Loading />}
           {error && <ErrorNote error={error} onRetry={reload} />}
@@ -54,8 +57,8 @@ export default function People() {
           {groups.map(([g, list]) => (
             <section key={g} className="people-group" aria-labelledby={`g-${g}`}>
               <h2 id={`g-${g}`}>{g} <small>{list.length}</small></h2>
-              <ul className={`people${g === 'Faculty' ? ' people--lead' : ''}`}>
-                {list.map((p) => <Face key={p._id} p={p} lead={g === 'Faculty'} onOpen={setOpen} />)}
+              <ul className={`portraits${g === 'Faculty' ? ' portraits--lead' : ''}`}>
+                {list.map((p) => <Person key={p._id} p={p} onOpen={setOpen} />)}
               </ul>
             </section>
           ))}
@@ -63,22 +66,17 @@ export default function People() {
       </section>
 
       {alumni.length > 0 && (
-        <section className="band bg-cells is-dark">
+        <section className="band band--tint">
           <div className="shell">
-            <div className="band__head">
-              <p className="kicker">Alumni</p>
-              <h2>Where our people are now</h2>
-            </div>
+            <div className="band__head"><p className="kicker">Alumni</p><h2>Former members</h2></div>
             <ul className="alumni">
               {alumni.map((p) => (
                 <li key={p._id}>
                   <button type="button" className="alum" onClick={() => setOpen(p)} aria-haspopup="dialog">
                     <Avatar name={p.name} src={p.photo} size="sm" />
-                    <span className="alum__text">
-                      <span className="alum__name">{p.name}</span>
-                      {p.currentPosition && <span className="alum__now">{p.currentPosition}</span>}
-                      {p.role && <span className="alum__was">At CMTMC: {p.role}</span>}
-                    </span>
+                    <span className="alum__name">{p.name}</span>
+                    <span className="alum__now">{p.currentPosition}</span>
+                    <span className="alum__was">{p.role}</span>
                   </button>
                 </li>
               ))}
@@ -87,7 +85,7 @@ export default function People() {
         </section>
       )}
 
-      <Modal open={Boolean(open)} onClose={() => setOpen(null)} label={open ? `About ${open.name}` : 'Bio'}>
+      <Modal open={Boolean(open)} onClose={() => setOpen(null)} label={open ? `Profile of ${open.name}` : 'Profile'}>
         {open && <Bio p={open} />}
       </Modal>
     </>

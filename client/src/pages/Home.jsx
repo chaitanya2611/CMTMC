@@ -1,171 +1,238 @@
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import HelixFigure from '../components/HelixFigure.jsx';
-import Pipeline from '../components/Pipeline.jsx';
-import { DisciplineTag, Avatar, TAG_CLASS } from '../components/ui.jsx';
+import { DisciplineTag, Avatar, Paragraphs, DateBlock, ExternalLink } from '../components/ui.jsx';
 import { useApi, useSite, useTitle, fmtDate } from '../lib/hooks.js';
 
-const DISCIPLINES = [
-  { cls: 'bio', tag: 'Biology', name: 'Targets & validation', text: 'Which plants, which molecules, which protein targets, and whether they really work in an assay.',
-    icon: <svg viewBox="0 0 56 56" aria-hidden="true"><path d="M16 4C16 20 40 20 40 28S16 36 16 52M40 4C40 20 16 20 16 28S40 36 40 52" fill="none" stroke="#14B8A6" strokeWidth="3" /><path d="M19 12H37M21 44H35M18 28H38" stroke="#14B8A6" strokeOpacity=".5" strokeWidth="2" /></svg> },
-  { cls: 'chem', tag: 'Chemistry', name: 'Molecules & catalysts', text: 'How to make those molecules cleanly, with catalysts designed for the job.',
-    icon: <svg viewBox="0 0 56 56" aria-hidden="true"><polygon points="28,6 46,16.5 46,37.5 28,48 10,37.5 10,16.5" fill="none" stroke="#C9821A" strokeWidth="3" /><circle cx="28" cy="27" r="10" fill="none" stroke="#C9821A" strokeWidth="2" strokeDasharray="3 4" /><path d="M46 16.5L54 12" stroke="#C9821A" strokeWidth="3" /></svg> },
-  { cls: 'ml', tag: 'AI/ML', name: 'Models & data', text: 'Models that read the literature, rank candidates and decide the next experiment.',
-    icon: <svg viewBox="0 0 56 56" aria-hidden="true"><path stroke="#6B5BE8" strokeOpacity=".5" strokeWidth="1.5" d="M10 14L28 10M10 14L28 28M10 14L28 46M10 42L28 10M10 42L28 28M10 42L28 46M28 10L46 20M28 28L46 20M28 46L46 20M28 10L46 38M28 28L46 38M28 46L46 38" /><g fill="#fff" stroke="#6B5BE8" strokeWidth="2.5"><circle cx="10" cy="14" r="4" /><circle cx="10" cy="42" r="4" /><circle cx="28" cy="10" r="4" /><circle cx="28" cy="28" r="4" /><circle cx="28" cy="46" r="4" /><circle cx="46" cy="20" r="4" /><circle cx="46" cy="38" r="4" /></g></svg> },
-];
-
-const TICKER = ['COc1cc(/C=C/C(=O)CC(=O)/C=C/c2ccc(O)c(OC)c2)ccc1O', 'ATGGCCAAGCTGACCGAGTTC…', 'pIC50 = 7.2', 'epoch 120 · loss 0.0213 ↓', 'AKT1 · PD-L1 · FXR', 'C–H activation · Pd(II)', 'GNN · diffusion · docking', 'Withania somnifera · Curcuma longa'];
+const isPlaceholder = (txt) => /^\[/.test((txt || '').trim());
+const pubHref = (p) => p.link || (p.doi ? `https://doi.org/${p.doi}` : '');
 
 export default function Home() {
   useTitle('');
   const { settings: s } = useSite();
   const thrusts = useApi('/thrusts');
   const people = useApi('/people');
-  const news = useApi('/news?limit=3');
+  const pubs = useApi('/publications');
+  const news = useApi('/news?limit=4');
   const openings = useApi('/openings');
-  const faculty = (people.data || []).filter((p) => p.group === 'Faculty' && !/^\[/.test(p.name)).slice(0, 6);
+
+  const faculty = useMemo(() => (people.data || []).filter((p) => p.group === 'Faculty' && !isPlaceholder(p.name)), [people.data]);
+  const departments = useMemo(() => {
+    const set = new Set();
+    faculty.forEach((p) => { const m = (p.role || '').split(',').slice(1).join(',').trim(); if (m) set.add(m); });
+    return [...set];
+  }, [faculty]);
+  const realPubs = (pubs.data || []).filter((p) => !isPlaceholder(p.title));
+  const featured = realPubs.filter((p) => p.featured).slice(0, 3);
+  const recent = realPubs.slice(0, 5);
+  const realNews = (news.data || []).filter((n) => !isPlaceholder(n.title));
+  const leadImage = (thrusts.data || []).find((t) => t.image);
+  const name = s?.name || 'Centre for Machine Learning–Driven Traditional Medicine and Catalysis';
 
   return (
     <>
+      {/* 1. Hero */}
       <section className="hero">
-        <video className="hero__video" autoPlay muted loop playsInline poster="/bg/bg-hero.jpg" aria-hidden="true" tabIndex={-1}>
-          <source src="/bg/hero-loop.mp4" type="video/mp4" />
-        </video>
         <div className="shell hero__grid">
-          <div className="hero__copy">
-            <div className="hero__tags"><DisciplineTag tag="Biology" /><DisciplineTag tag="Chemistry" /><DisciplineTag tag="AI/ML" /></div>
-            <h1 className="hero__title">
-              {s?.heroTitle && !/read by machines/i.test(s.heroTitle)
-                ? s.heroTitle.replace(/\*/g, '')
-                : <>From genes and molecules to <em>models</em> that discover drugs</>}
-            </h1>
-            <p className="hero__text">{s?.heroText}</p>
+          <div>
+            <p className="hero__eyebrow">Indian Institute of Technology Bombay</p>
+            <h1 className="hero__title">{name}</h1>
+            {s?.heroText && <p className="hero__text">{s.heroText}</p>}
             <div className="hero__actions">
-              <Link className="btn btn--teal" to="/research">Explore research</Link>
-              <Link className="btn btn--ghost-light" to="/people">Meet the team</Link>
+              <Link className="btn btn--primary" to="/research">Explore research</Link>
+              <Link className="btn btn--line" to="/about">About CMTMC</Link>
             </div>
           </div>
-          <figure className="hero__figure"><HelixFigure /></figure>
-        </div>
-        <div className="hero__ticker" aria-hidden="true">
-          <div className="hero__ticker-track">{[...TICKER, ...TICKER].map((t, i) => <span key={i}>{t}</span>)}</div>
+          <aside className="hero__aside">
+            {leadImage && (
+              <figure className="hero__fig">
+                <img src={leadImage.image} alt="" />
+                <figcaption>{leadImage.title}</figcaption>
+              </figure>
+            )}
+            {thrusts.data?.length > 0 && (
+              <div className="glance">
+                <h2>Research themes</h2>
+                <ul>{thrusts.data.map((t) => <li key={t._id}><Link to={`/research/${t._id}`}>{t.title}</Link></li>)}</ul>
+              </div>
+            )}
+            {departments.length > 0 && (
+              <div className="glance">
+                <h2>Participating departments</h2>
+                <ul>{departments.map((d) => <li key={d}>{d}</li>)}</ul>
+              </div>
+            )}
+          </aside>
         </div>
       </section>
 
-      <section className="band bg-lattice">
-        <div className="shell">
-          <div className="band__head">
-            <p className="kicker">Three disciplines, one pipeline</p>
-            <h2>Biology asks the question. Chemistry builds the answer. AI connects them.</h2>
-          </div>
-          <ul className="disciplines">
-            {DISCIPLINES.map((d) => (
-              <li key={d.cls} className={`disc disc--${d.cls}`}>
-                {d.icon}
-                <DisciplineTag tag={d.tag} />
-                <h3>{d.name}</h3>
-                <p>{d.text}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {s?.pipeline?.length > 0 && (
-        <section className="band band--white">
-          <div className="shell">
-            <div className="band__head">
-              <p className="kicker">How a project runs</p>
-              <h2>From classical text to tested molecule</h2>
-              <p>Every project runs through the same steps, and lab results flow back into the models.</p>
+      {/* 2. About */}
+      {(s?.about || s?.mission) && (
+        <section className="band">
+          <div className="shell intro">
+            <div>
+              <p className="kicker">About the centre</p>
+              <h2 style={{ fontSize: 'clamp(1.6rem, 2.4vw, 2.1rem)' }}>Why CMTMC exists</h2>
             </div>
-            <Pipeline steps={s.pipeline} />
+            <div className="intro__text">
+              {s.about ? <Paragraphs text={s.about} limit={2} /> : <p>{s.mission}</p>}
+              {s.aboutMore && <Paragraphs text={s.aboutMore} limit={1} />}
+              <p><Link className="more" to="/about">More about the centre</Link></p>
+            </div>
           </div>
         </section>
       )}
 
-      <section className="band bg-cells is-dark">
-        <div className="shell">
-          <div className="band__head band__head--split">
-            <div><p className="kicker">Research</p><h2>What we work on</h2></div>
-            <Link className="textlink" to="/research">All research and platforms →</Link>
-          </div>
-          <div className="cards">
-            {(thrusts.data || []).map((t) => (
-              <Link key={t._id} to={`/research/${t._id}`} className="rcard">
-                {t.image ? <img className="rcard__img" src={t.image} alt="" loading="lazy" /> : <div className={`rcard__art rcard__art--${TAG_CLASS[t.tag] || 'bio'}`} aria-hidden="true" />}
-                <div className="rcard__body">
-                  <DisciplineTag tag={t.tag} />
-                  <h3>{t.title}</h3>
-                  <p>{t.summary}</p>
-                  <span className="rcard__more">Read more →</span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {faculty.length > 0 && (
-        <section className="band bg-network is-dark">
+      {/* 3. Research */}
+      {thrusts.data?.length > 0 && (
+        <section className="band band--white">
           <div className="shell">
             <div className="band__head band__head--split">
-              <div><p className="kicker">People</p><h2>The team behind the pipeline</h2></div>
-              <Link className="textlink" to="/people">Meet everyone →</Link>
+              <div><p className="kicker">Research</p><h2>Research themes</h2></div>
+              <Link className="more" to="/research">All research and platforms</Link>
             </div>
-            <div className="facestrip">
-              {faculty.map((p) => (
-                <Link key={p._id} to="/people" className="face">
-                  <span className="face__ring"><Avatar name={p.name} src={p.photo} size="md" /></span>
-                  <span className="face__name">{p.name}</span>
-                  <span className="face__role">{p.role}</span>
-                </Link>
+            <ol className="themes">
+              {thrusts.data.map((t, i) => (
+                <li key={t._id} className={`theme${t.image ? ' theme--img' : ''}`}>
+                  <span className="theme__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                  <div>
+                    <h3><Link to={`/research/${t._id}`}>{t.title}</Link></h3>
+                    <DisciplineTag tag={t.tag} />
+                  </div>
+                  <div className="theme__desc">
+                    <p>{t.summary}</p>
+                    <Link className="more" to={`/research/${t._id}`} aria-label={`Learn more about ${t.title}`}>Learn more</Link>
+                  </div>
+                  {t.image && <div className="theme__img"><img src={t.image} alt="" loading="lazy" /></div>}
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      )}
+
+      {/* 4. Featured research: papers marked "featured" in the admin panel */}
+      {featured.length > 0 && (
+        <section className="band">
+          <div className="shell">
+            <div className="band__head"><p className="kicker">Featured research</p><h2>Selected recent work</h2></div>
+            <div className="features">
+              {featured.map((p) => (
+                <article key={p._id} className="feature">
+                  {p.image && <img className="feature__img" src={p.image} alt={`Graphical abstract: ${p.title}`} loading="lazy" />}
+                  <p className="feature__venue">{[p.venue, p.year].filter(Boolean).join(' · ')}</p>
+                  <h3><ExternalLink href={pubHref(p)}>{p.title}</ExternalLink></h3>
+                  {p.authors && <p className="feature__authors">{p.authors}</p>}
+                </article>
               ))}
             </div>
           </div>
         </section>
       )}
 
-      <section className="band bg-lattice">
+      {/* 5. People */}
+      {faculty.length > 0 && (
+        <section className="band band--tint">
+          <div className="shell">
+            <div className="band__head band__head--split">
+              <div><p className="kicker">People</p><h2>Faculty</h2></div>
+              <Link className="more" to="/people">All people</Link>
+            </div>
+            <ul className="portraits">
+              {faculty.slice(0, 6).map((p) => (
+                <li key={p._id}>
+                  <Link to="/people" className="person">
+                    <span className="person__img"><Avatar name={p.name} src={p.photo} /></span>
+                    <span>
+                      <span className="person__name">{p.name}</span><br />
+                      <span className="person__role">{p.role}</span>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
+
+      {/* 6. Publications */}
+      {recent.length > 0 && (
+        <section className="band band--white">
+          <div className="shell sechead">
+            <div className="sechead__label">
+              <p className="kicker">Publications</p>
+              <h2>Recent publications</h2>
+              <Link className="more" to="/publications">View all publications</Link>
+            </div>
+            <ol className="citations">
+              {recent.map((p) => (
+                <li key={p._id} className="citation citation--plain">
+                  <div>
+                    <p className="citation__title"><ExternalLink href={pubHref(p)}>{p.title}</ExternalLink></p>
+                    {p.authors && <p className="citation__authors">{p.authors}</p>}
+                    <p className="citation__src">
+                      {p.venue && <cite>{p.venue}</cite>}
+                      {p.year && <span>{p.year}</span>}
+                      {p.doi && <span className="citation__doi">doi:{p.doi}</span>}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      )}
+
+      {/* 7. News + opportunities */}
+      <section className="band">
         <div className="shell twocol">
           <div>
             <div className="band__head band__head--split">
-              <div><p className="kicker">Latest</p><h2>News &amp; events</h2></div>
-              <Link className="textlink" to="/news">All news →</Link>
+              <div><p className="kicker">News</p><h2>News and events</h2></div>
+              <Link className="more" to="/news">All news</Link>
             </div>
-            <ul className="newsbrief">
-              {(news.data || []).slice(0, 3).map((n) => (
-                <li key={n._id}>
-                  <time className="newsbrief__date" dateTime={n.date}>{fmtDate(n.date, { day: 'numeric' })}<small>{fmtDate(n.date, { month: 'short' }).toUpperCase()}</small></time>
-                  <div><span className="newsbrief__kind">{n.kind}</span><br /><Link to={`/news/${n._id}`}>{n.title}</Link></div>
-                </li>
-              ))}
-              {news.data && !news.data.length && <li className="state">News will appear here.</li>}
-            </ul>
+            {realNews.length ? (
+              <ul className="newsbrief">
+                {realNews.slice(0, 4).map((n) => (
+                  <li key={n._id}>
+                    <DateBlock date={n.date} />
+                    <div>
+                      <span className="newsbrief__kind">{n.kind}{n.venue ? ` · ${n.venue}` : ''}</span>
+                      <Link to={`/news/${n._id}`}>{n.title}</Link>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : <p className="state">News and events will be posted here.</p>}
           </div>
-          <aside className="openings-card">
-            <h2>Open positions</h2>
+          <aside className="openings-card" aria-labelledby="home-openings">
+            <h2 id="home-openings">Opportunities</h2>
             {openings.data?.length ? (
               <ul>
                 {openings.data.slice(0, 4).map((o) => (
                   <li key={o._id}>
                     <span className="openings-card__type">{o.type}</span>
-                    <span>{o.title}</span>
+                    <span className="openings-card__title">{o.title}</span>
                     {o.deadline && <span className="openings-card__date">Apply by {fmtDate(o.deadline)}</span>}
                   </li>
                 ))}
               </ul>
-            ) : <p>No positions are open right now. You can still write to us about a PhD or internship.</p>}
-            <Link className="btn btn--forest" to="/openings">View openings</Link>
+            ) : <p>There are no open positions at the moment. Enquiries about PhD, postdoctoral and internship positions are welcome.</p>}
+            <Link className="btn btn--line" to="/openings">View opportunities</Link>
           </aside>
         </div>
       </section>
 
-      <section className="joinband">
-        <div className="shell joinband__inner">
-          <p className="joinband__line">Trained in one of the three fields? You will learn the other two here.</p>
-          <Link className="btn btn--forest" to="/contact">Get in touch</Link>
-        </div>
-      </section>
+      {/* 8. Collaborations: only when entered in Site settings */}
+      {s?.partners?.length > 0 && (
+        <section className="band band--white">
+          <div className="shell">
+            <div className="band__head"><p className="kicker">Collaborations</p><h2>Partners and affiliations</h2></div>
+            <ul className="partners">
+              {s.partners.map((p, i) => <li key={i}><ExternalLink href={p.link}>{p.name}</ExternalLink></li>)}
+            </ul>
+          </div>
+        </section>
+      )}
     </>
   );
 }

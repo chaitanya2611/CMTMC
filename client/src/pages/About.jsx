@@ -8,7 +8,7 @@ export default function About() {
   return (
     <>
       <PageHead kicker="About" title="About the centre" intro={s.name} />
-      <section className="band bg-lattice">
+      <section className="band">
         <div className="shell about">
           <div className="prose prose--lead">
             <Paragraphs text={s.about} />
@@ -24,7 +24,7 @@ export default function About() {
       </section>
 
       {s.stats?.length > 0 && (
-        <section className="band bg-network is-dark">
+        <section className="band band--tint">
           <div className="shell">
             <dl className="figures">
               {s.stats.map((x, i) => (
@@ -36,7 +36,7 @@ export default function About() {
       )}
 
       {s.pipeline?.length > 0 && (
-        <section className="band bg-lattice">
+        <section className="band">
           <div className="shell">
             <div className="band__head"><p className="kicker">Workflow</p><h2>How a project runs</h2></div>
             <Pipeline steps={s.pipeline} />

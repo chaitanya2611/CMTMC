@@ -1,13 +1,11 @@
-// A benzene ring whose vertices are network nodes: biology (teal), chemistry (saffron) and AI (violet) joined at the centre.
+// Typographic monogram used where a compact mark is needed (admin panel, favicon).
+// The site uses a text wordmark in the header; no emblem is invented for the centre.
 export default function Logo({ size = 34 }) {
   return (
     <svg className="logo" width={size} height={size} viewBox="0 0 64 64" aria-hidden="true">
-      <polygon points="32,6 54,19 54,45 32,58 10,45 10,19" fill="none" stroke="var(--teal)" strokeWidth="3.5" />
-      <path d="M32 6V32L54 45M32 32L10 45" stroke="currentColor" strokeOpacity="0.55" strokeWidth="2.4" />
-      <circle cx="32" cy="6" r="5" fill="var(--violet)" />
-      <circle cx="54" cy="45" r="5" fill="var(--saffron)" />
-      <circle cx="10" cy="45" r="5" fill="var(--teal)" />
-      <circle cx="32" cy="32" r="4" fill="currentColor" />
+      <rect width="64" height="64" rx="6" fill="#14233F" />
+      <text x="32" y="45" textAnchor="middle" fontFamily="Georgia, 'Times New Roman', serif" fontSize="38" fill="#fff">C</text>
+      <rect x="14" y="52" width="36" height="3" fill="#B98A2E" />
     </svg>
   );
 }

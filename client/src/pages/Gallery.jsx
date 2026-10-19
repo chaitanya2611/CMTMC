@@ -40,8 +40,8 @@ export default function Gallery() {
 
   return (
     <>
-      <PageHead kicker="Gallery" title="Life at the centre" intro="Conferences, awards, lab days and trips. Select an album to see the photos." />
-      <section className="band bg-lattice">
+      <PageHead kicker="Gallery" title="Gallery" intro="Photographs from conferences, seminars, awards and centre events. Select an album to view it." />
+      <section className="band">
         <div className="shell">
           {loading && <Loading />}
           {error && <ErrorNote error={error} onRetry={reload} />}
@@ -53,7 +53,7 @@ export default function Gallery() {
                 <div>
                   <p className="kicker">{album.date ? fmtDate(album.date, { month: 'long', year: 'numeric' }) : 'Album'}</p>
                   <h2>{album.title}</h2>
-                  {album.description && <p style={{ marginTop: 10, color: 'var(--ink-soft)', maxWidth: '44em' }}>{album.description}</p>}
+                  {album.description && <p className="album-view__desc">{album.description}</p>}
                 </div>
                 <button type="button" className="btn btn--line" onClick={() => setAlbumId(null)}>← All albums</button>
               </div>
@@ -76,7 +76,7 @@ export default function Gallery() {
                     <span className="album__count">{a.images.length} photos</span>
                   </span>
                   <span style={{ display: 'grid', gap: 4 }}>
-                    <span style={{ font: '700 var(--t-lg)/1.2 var(--display)' }}>{a.title}</span>
+                    <span className="album__title">{a.title}</span>
                     {a.date && <span className="album__meta">{fmtDate(a.date, { month: 'long', year: 'numeric' })}</span>}
                   </span>
                 </button>

@@ -29,8 +29,8 @@ export default function Contact() {
 
   return (
     <>
-      <PageHead title="Contact" intro="Questions about our research, collaborations or positions. Send a message and the team will reply by email." />
-      <section className="band bg-lattice">
+      <PageHead kicker="Contact" title="Contact" intro="Questions about our research, collaborations or positions. Send a message and the team will reply by email." />
+      <section className="band">
         <div className="shell contact">
           <form className="contact__form" onSubmit={submit} noValidate>
             <div className="field-row">
