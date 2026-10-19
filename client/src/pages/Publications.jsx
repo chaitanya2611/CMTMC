@@ -1,11 +1,35 @@
 import { useMemo, useState } from 'react';
-import { PageHead, Loading, ErrorNote, Empty, ExternalLink } from '../components/ui.jsx';
+import { PageHead, Loading, ErrorNote, Empty, ExternalLink, Modal } from '../components/ui.jsx';
 import { useApi } from '../lib/hooks.js';
+
+export function PubItem({ p, onZoom }) {
+  const href = p.link || (p.doi ? `https://doi.org/${p.doi}` : '');
+  return (
+    <li className={`pub${p.featured ? ' is-featured' : ''}`}>
+      {p.image && (
+        <button type="button" className="pub__imgbtn" onClick={() => onZoom?.(p)} aria-label={`Enlarge graphical abstract: ${p.title}`}>
+          <img className="pub__img" src={p.image} alt="" loading="lazy" />
+        </button>
+      )}
+      <div>
+        <p className="publist__title"><ExternalLink href={href}>{p.title}</ExternalLink></p>
+        {p.authors && <p className="publist__authors">{p.authors}</p>}
+        <p className="publist__venue">
+          {p.venue && <cite>{p.venue}</cite>}
+          {p.year && <span>{p.year}</span>}
+          {p.doi && <span className="publist__doi">doi:{p.doi}</span>}
+          {p.featured && <span className="publist__feat">Featured</span>}
+        </p>
+      </div>
+    </li>
+  );
+}
 
 export default function Publications() {
   const { data, error, loading, reload } = useApi('/publications');
   const [q, setQ] = useState('');
   const [year, setYear] = useState('');
+  const [zoom, setZoom] = useState(null);
 
   const years = useMemo(() => [...new Set((data || []).map((p) => p.year).filter(Boolean))].sort((a, b) => b - a), [data]);
   const shown = useMemo(() => {
@@ -21,8 +45,8 @@ export default function Publications() {
 
   return (
     <>
-      <PageHead title="Publications" intro="Papers, preprints and conference proceedings from the centre." />
-      <section className="band band--paper">
+      <PageHead kicker="Publications" title="Papers, with their graphical abstracts" intro="Journal articles, preprints and conference papers from the centre, newest first." />
+      <section className="band bg-lattice">
         <div className="shell">
           <form className="filters" role="search" onSubmit={(e) => e.preventDefault()}>
             <label className="field">
@@ -44,25 +68,19 @@ export default function Publications() {
           {data && !shown.length && <Empty>{data.length ? 'No publications match those filters.' : 'Publications will be listed here soon.'}</Empty>}
 
           {byYear.map(([y, list]) => (
-            <section key={y} className="pubyear">
-              <h2>{y}</h2>
+            <section key={y} className="pubyear" aria-labelledby={`y-${y}`}>
+              <h2 id={`y-${y}`}>{y}</h2>
               <ol className="publist">
-                {list.map((p) => (
-                  <li key={p._id} className={p.featured ? 'is-featured' : undefined}>
-                    <p className="publist__title"><ExternalLink href={p.link || (p.doi ? `https://doi.org/${p.doi}` : '')}>{p.title}</ExternalLink></p>
-                    {p.authors && <p className="publist__authors">{p.authors}</p>}
-                    <p className="publist__venue">
-                      {p.venue && <cite>{p.venue}</cite>}
-                      {p.doi && <span className="publist__doi">doi:{p.doi}</span>}
-                      {p.featured && <span className="publist__feat">Featured</span>}
-                    </p>
-                  </li>
-                ))}
+                {list.map((p) => <PubItem key={p._id} p={p} onZoom={setZoom} />)}
               </ol>
             </section>
           ))}
         </div>
       </section>
+
+      <Modal open={Boolean(zoom)} onClose={() => setZoom(null)} label="Graphical abstract" className="modal--photo">
+        {zoom && <><img className="lightimg" src={zoom.image} alt={`Graphical abstract: ${zoom.title}`} /><p className="lightbox__cap">{zoom.title}</p></>}
+      </Modal>
     </>
   );
 }

@@ -100,6 +100,7 @@ function Overview({ unread }) {
     ['Research thrusts', data?.thrusts, '/admin/thrusts'],
     ['People', data?.people, '/admin/people'],
     ['Publications', data?.publications, '/admin/publications'],
+    ['Gallery albums', data?.albums, '/admin/albums'],
     ['News & events', data?.news, '/admin/news'],
     ['Open positions', data?.openings, '/admin/openings'],
     ['Unread messages', unread, '/admin/messages'],
@@ -121,6 +122,8 @@ function Overview({ unread }) {
           <li><Link to="/admin/publications">Import a paper from its DOI</Link></li>
           <li><Link to="/admin/news">Announce a seminar or event</Link></li>
           <li><Link to="/admin/openings">Post or close a position</Link></li>
+          <li><Link to="/admin/albums">Create a photo album</Link></li>
+          <li><Link to="/admin/settings">Turn on the announcement bar</Link></li>
           <li><Link to="/admin/settings">Edit the home page headline and contact details</Link></li>
         </ul>
       </section>

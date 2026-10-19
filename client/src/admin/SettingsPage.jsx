@@ -3,6 +3,12 @@ import { api } from '../lib/api.js';
 import { Field } from './fields.jsx';
 
 const GROUPS = [
+  { title: 'Announcement bar (top of every page)', fields: [
+    { name: 'bannerOn', label: 'Show the announcement bar', kind: 'checkbox' },
+    { name: 'bannerText', label: 'Announcement text, e.g. Winter School on AI for Natural Products, 12–14 Dec 2026', kind: 'text' },
+    { name: 'bannerLabel', label: 'Button text (optional), e.g. Register', kind: 'text' },
+    { name: 'bannerLink', label: 'Button link (optional): https://… or a page such as /news', kind: 'text' },
+  ] },
   { title: 'Identity', fields: [
     { name: 'shortName', label: 'Short name (shown in the header)', kind: 'text' },
     { name: 'name', label: 'Full centre name', kind: 'text' },

@@ -30,7 +30,7 @@ export default function Contact() {
   return (
     <>
       <PageHead title="Contact" intro="Questions about our research, collaborations or positions. Send a message and the team will reply by email." />
-      <section className="band band--paper">
+      <section className="band bg-lattice">
         <div className="shell contact">
           <form className="contact__form" onSubmit={submit} noValidate>
             <div className="field-row">

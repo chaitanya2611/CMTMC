@@ -10,7 +10,7 @@ export default function Openings() {
   return (
     <>
       <PageHead title="Openings" intro={settings?.joinText} />
-      <section className="band band--paper">
+      <section className="band bg-lattice">
         <div className="shell">
           {loading && <Loading />}
           {error && <ErrorNote error={error} onRetry={reload} />}

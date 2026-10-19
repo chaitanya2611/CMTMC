@@ -1,5 +1,5 @@
 // Field definitions for each editable collection. The admin forms and lists are generated from these.
-// kinds: text, textarea, select, number, date, checkbox, image, tags, url
+// kinds: text, textarea, select, number, date, checkbox, image, images, tags, url
 export const COLLECTIONS = {
   thrusts: {
     label: 'Research thrusts', singular: 'research thrust', endpoint: '/thrusts', orderable: true,
@@ -10,7 +10,8 @@ export const COLLECTIONS = {
       { name: 'summary', label: 'Summary (one or two sentences, shown on the home page)', kind: 'textarea', rows: 3 },
       { name: 'details', label: 'Details (shown on the Research page; leave a blank line between paragraphs)', kind: 'textarea', rows: 8 },
       { name: 'keywords', label: 'Keywords', kind: 'tags', help: 'Separate with commas' },
-      { name: 'image', label: 'Image', kind: 'image' },
+      { name: 'image', label: 'Image (shown on the card and the programme page)', kind: 'image' },
+      { name: 'paperDois', label: 'Representative paper DOIs', kind: 'tags', help: 'Separate with commas. Papers must already be added under Publications. Leave empty to match papers by keyword.' },
     ],
   },
   platforms: {
@@ -32,7 +33,8 @@ export const COLLECTIONS = {
       { name: 'role', label: 'Role or designation', kind: 'text' },
       { name: 'group', label: 'Group', kind: 'select', options: ['Faculty', 'Scientists & postdocs', 'PhD students', 'MTech & MSc students', 'Undergraduate researchers', 'Project staff', 'Alumni'] },
       { name: 'photo', label: 'Photo', kind: 'image' },
-      { name: 'bio', label: 'Short bio', kind: 'textarea', rows: 4 },
+      { name: 'bio', label: 'Bio (shown in the "View bio" pop-up; leave a blank line between paragraphs)', kind: 'textarea', rows: 6 },
+      { name: 'currentPosition', label: 'Current position (alumni only), e.g. Postdoc, EPFL', kind: 'text' },
       { name: 'interests', label: 'Research interests', kind: 'tags', help: 'Separate with commas' },
       { name: 'email', label: 'Email', kind: 'text' },
       { name: 'profileLink', label: 'Profile or homepage link', kind: 'url' },
@@ -49,6 +51,7 @@ export const COLLECTIONS = {
       { name: 'year', label: 'Year', kind: 'number' },
       { name: 'doi', label: 'DOI', kind: 'text', help: 'For example 10.1021/acscatal.0c04525' },
       { name: 'link', label: 'Link (if different from the DOI page)', kind: 'url' },
+      { name: 'image', label: 'Graphical abstract (TOC image)', kind: 'image' },
       { name: 'featured', label: 'Highlight this paper', kind: 'checkbox' },
     ],
   },
@@ -63,6 +66,17 @@ export const COLLECTIONS = {
       { name: 'text', label: 'Text (leave a blank line between paragraphs)', kind: 'textarea', rows: 8 },
       { name: 'image', label: 'Image', kind: 'image' },
       { name: 'link', label: 'Registration or more-info link', kind: 'url' },
+    ],
+  },
+  albums: {
+    label: 'Gallery', singular: 'album', endpoint: '/albums', orderable: true,
+    titleField: 'title', subtitle: (d) => [d.images?.length ? `${d.images.length} photos` : 'No photos yet', d.date && new Date(d.date).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })].filter(Boolean).join(', '),
+    thumb: (d) => d.images?.[0],
+    fields: [
+      { name: 'title', label: 'Album title', kind: 'text', required: true },
+      { name: 'date', label: 'Date', kind: 'date' },
+      { name: 'description', label: 'Description', kind: 'textarea', rows: 3 },
+      { name: 'images', label: 'Photos (the first one is the album cover)', kind: 'images' },
     ],
   },
   openings: {
@@ -87,7 +101,7 @@ export function blankFor(schema) {
     if (f.default !== undefined) doc[f.name] = f.default;
     else if (f.kind === 'select') doc[f.name] = f.options[0];
     else if (f.kind === 'checkbox') doc[f.name] = false;
-    else if (f.kind === 'tags') doc[f.name] = [];
+    else if (f.kind === 'tags' || f.kind === 'images') doc[f.name] = [];
     else if (f.kind === 'number') doc[f.name] = f.name === 'year' ? new Date().getFullYear() : '';
     else if (f.kind === 'date') doc[f.name] = f.name === 'date' ? new Date().toISOString().slice(0, 10) : '';
     else doc[f.name] = '';

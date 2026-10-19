@@ -21,6 +21,11 @@ const settingsSchema = new Schema({
   stats: [{ _id: false, value: str(20), label: str(80) }],
   pipeline: [{ _id: false, title: str(60), text: str(400) }],
   partners: [{ _id: false, name: str(120), link: url }],
+  // Announcement bar across the top of every page
+  bannerOn: { type: Boolean, default: false },
+  bannerText: str(240), bannerLabel: str(40),
+  bannerLink: { type: String, trim: true, maxlength: 1000, default: '',
+    validate: { validator: (v) => !v || /^https?:\/\/\S+$/i.test(v) || /^\/[^\s/][^\s]*$|^\/$/.test(v), message: 'Use a full link (https://…) or a page on this site such as /news' } },
 }, opts);
 export const Settings = model('Settings', settingsSchema);
 
@@ -32,6 +37,7 @@ export const Thrust = model('Thrust', new Schema({
   summary: str(600), details: str(5000),
   keywords: [str(60)],
   image: url,
+  paperDois: [{ type: String, trim: true, lowercase: true, maxlength: 200 }],
   order: { type: Number, default: 0 },
 }, opts));
 
@@ -49,6 +55,7 @@ export const Person = model('Person', new Schema({
   role: str(160), group: { type: String, enum: PEOPLE_GROUPS, default: 'Faculty' },
   bio: str(1500), interests: [str(60)],
   photo: url, email: str(200), profileLink: url, scholarLink: url,
+  currentPosition: str(200), // for alumni: where they are now
   order: { type: Number, default: 0 },
 }, opts));
 
@@ -58,6 +65,7 @@ export const Publication = model('Publication', new Schema({
   year: { type: Number, min: 1900, max: 2100 },
   doi: { type: String, trim: true, lowercase: true, maxlength: 200, default: '' },
   link: url,
+  image: url, // graphical abstract / TOC image
   featured: { type: Boolean, default: false },
 }, opts));
 
@@ -75,6 +83,14 @@ export const Opening = model('Opening', new Schema({
   deadline: { type: Date },
   applyLink: url, contactEmail: str(200),
   isOpen: { type: Boolean, default: true },
+}, opts));
+
+export const Album = model('Album', new Schema({
+  title: str(160, { required: [true, 'Title is required'] }),
+  date: { type: Date },
+  description: str(1000),
+  images: [url],
+  order: { type: Number, default: 0 },
 }, opts));
 
 export const Message = model('Message', new Schema({

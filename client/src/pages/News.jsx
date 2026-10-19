@@ -14,7 +14,7 @@ export default function News() {
   return (
     <>
       <PageHead title="News & events" intro="Seminars, workshops, awards and updates from the centre." />
-      <section className="band band--paper">
+      <section className="band bg-lattice">
         <div className="shell">
           <div className="segmented" role="group" aria-label="Filter by type">
             {KINDS.map((k) => (

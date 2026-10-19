@@ -15,7 +15,7 @@ import settingsRoutes from './routes/settings.js';
 import uploadRoutes, { UPLOAD_DIR } from './routes/uploads.js';
 import messageRoutes from './routes/messages.js';
 import { addDoiRoutes } from './routes/doi.js';
-import { Thrust, Platform, Person, Publication, News, Opening, Message } from './models/index.js';
+import { Thrust, Platform, Person, Publication, News, Opening, Message, Album } from './models/index.js';
 
 const app = express();
 app.set('trust proxy', 1); // behind Render/Railway/Nginx, so rate limits see the real client IP
@@ -43,6 +43,7 @@ app.use('/uploads', express.static(UPLOAD_DIR, { maxAge: '30d', fallthrough: fal
 
 app.use('/api/thrusts', crudRouter(Thrust));
 app.use('/api/platforms', crudRouter(Platform));
+app.use('/api/albums', crudRouter(Album, { sort: { order: 1, date: -1, createdAt: -1 } }));
 app.use('/api/people', crudRouter(Person));
 app.use('/api/publications', crudRouter(Publication, {
   sort: { year: -1, createdAt: -1 },
@@ -66,11 +67,11 @@ app.use('/api/openings', crudRouter(Opening, {
 
 // Dashboard counts for the admin home
 app.get('/api/admin/summary', requireAdmin, asyncHandler(async (req, res) => {
-  const [thrusts, people, publications, news, openings, unread] = await Promise.all([
+  const [thrusts, people, publications, news, openings, unread, albums] = await Promise.all([
     Thrust.countDocuments(), Person.countDocuments(), Publication.countDocuments(),
-    News.countDocuments(), Opening.countDocuments({ isOpen: true }), Message.countDocuments({ read: false }),
+    News.countDocuments(), Opening.countDocuments({ isOpen: true }), Message.countDocuments({ read: false }), Album.countDocuments(),
   ]);
-  res.json({ thrusts, people, publications, news, openings, unread });
+  res.json({ thrusts, people, publications, news, openings, unread, albums });
 }));
 
 // In production, also serve the built React site from the same service

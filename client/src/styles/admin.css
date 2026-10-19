@@ -144,3 +144,10 @@
 .adm-login__brand .logo { color: var(--forest); }
 .adm-login h1 { font: 400 2rem var(--serif); }
 .adm-login__back { justify-self: center; font-size: .92rem; color: var(--ink-soft); }
+
+.adm-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+.adm-gallery__item { margin: 0; border: 1px solid var(--adm-rule, #d8dee0); border-radius: 10px; overflow: hidden; background: #fff; }
+.adm-gallery__item img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+.adm-gallery__item figcaption { display: flex; gap: 4px; justify-content: space-between; padding: 6px; }
+.adm-gallery__item button { border: 0; background: transparent; cursor: pointer; padding: 4px 6px; font: inherit; min-height: 32px; }
+.adm-gallery__item button:disabled { opacity: .3; cursor: default; }

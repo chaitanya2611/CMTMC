@@ -4,6 +4,8 @@ import SiteLayout from './components/SiteLayout.jsx';
 import Home from './pages/Home.jsx';
 import About from './pages/About.jsx';
 import Research from './pages/Research.jsx';
+import ResearchDetail from './pages/ResearchDetail.jsx';
+import Gallery from './pages/Gallery.jsx';
 import People from './pages/People.jsx';
 import Publications from './pages/Publications.jsx';
 import News from './pages/News.jsx';
@@ -22,6 +24,8 @@ export default function App() {
         <Route index element={<Home />} />
         <Route path="about" element={<About />} />
         <Route path="research" element={<Research />} />
+        <Route path="research/:id" element={<ResearchDetail />} />
+        <Route path="gallery" element={<Gallery />} />
         <Route path="people" element={<People />} />
         <Route path="publications" element={<Publications />} />
         <Route path="news" element={<News />} />

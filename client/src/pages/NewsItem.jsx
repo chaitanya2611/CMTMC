@@ -10,7 +10,7 @@ export default function NewsItem() {
   return (
     <>
       <PageHead title={n.title} intro={[n.kind, fmtDate(n.date, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }), n.venue].filter(Boolean).join(', ')} />
-      <article className="band band--paper">
+      <article className="band bg-lattice">
         <div className="shell article">
           {n.image && <img className="article__img" src={n.image} alt="" />}
           <div className="prose prose--lead"><Paragraphs text={n.text} /></div>

@@ -41,7 +41,7 @@ export default function CollectionPage({ schema }) {
             {items.map((d, i) => (
               <li key={d._id} className={editing?._id === d._id ? 'is-active' : undefined}>
                 <button className="adm-list__main" onClick={() => { setEditing(d); setFlash(''); }}>
-                  {schema.thumb && (d[schema.thumb] ? <img src={d[schema.thumb]} alt="" /> : <span className="adm-list__ph" />)}
+                  {schema.thumb && ((typeof schema.thumb === 'function' ? schema.thumb(d) : d[schema.thumb]) ? <img src={typeof schema.thumb === 'function' ? schema.thumb(d) : d[schema.thumb]} alt="" /> : <span className="adm-list__ph" />)}
                   <span className="adm-list__text">
                     <strong>{d[schema.titleField] || `Untitled ${schema.singular}`}</strong>
                     <span>{schema.subtitle?.(d)}</span>

@@ -7,8 +7,8 @@ export default function About() {
   if (!s) return <PageHead title="About the centre" />;
   return (
     <>
-      <PageHead title="About the centre" intro={s.name} />
-      <section className="band band--paper">
+      <PageHead kicker="About" title="About the centre" intro={s.name} />
+      <section className="band bg-lattice">
         <div className="shell about">
           <div className="prose prose--lead">
             <Paragraphs text={s.about} />
@@ -24,7 +24,7 @@ export default function About() {
       </section>
 
       {s.stats?.length > 0 && (
-        <section className="band">
+        <section className="band bg-network is-dark">
           <div className="shell">
             <dl className="figures">
               {s.stats.map((x, i) => (
@@ -36,9 +36,9 @@ export default function About() {
       )}
 
       {s.pipeline?.length > 0 && (
-        <section className="band band--paper">
+        <section className="band bg-lattice">
           <div className="shell">
-            <div className="band__head"><h2>How a project runs</h2></div>
+            <div className="band__head"><p className="kicker">Workflow</p><h2>How a project runs</h2></div>
             <Pipeline steps={s.pipeline} />
           </div>
         </section>
@@ -47,7 +47,7 @@ export default function About() {
       {s.partners?.length > 0 && (
         <section className="band">
           <div className="shell">
-            <div className="band__head"><h2>Partners and collaborators</h2></div>
+            <div className="band__head"><p className="kicker">Partners</p><h2>Partners and collaborators</h2></div>
             <ul className="partners">
               {s.partners.map((p, i) => <li key={i}><ExternalLink href={p.link}>{p.name}</ExternalLink></li>)}
             </ul>
