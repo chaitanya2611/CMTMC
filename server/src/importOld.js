@@ -1,5 +1,5 @@
 // Imports the real people and mission text taken from the old CMTMC website,
-// and removes the "[placeholder]" people added by the seed.
+// and removes any legacy "[placeholder]" people.
 // Photos live in server/assets/uploads and are served at /uploads/people-*.jpg.
 //   npm run import-old            add or update everyone (matched by name)
 //   npm run import-old -- --once  do nothing if real people already exist (used on each Render start)
