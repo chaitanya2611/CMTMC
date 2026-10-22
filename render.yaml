@@ -6,8 +6,8 @@ services:
     runtime: node
     plan: free
     buildCommand: npm --prefix server install && npm --prefix client install --include=dev && npm --prefix client run build
-    # Seeds an empty database and loads the real people once, then starts the server
-    startCommand: cd server && node src/seed.js && node src/importOld.js --once && node src/index.js
+    # Loads the real people once, then starts the server. Other content is managed through the admin panel.
+    startCommand: cd server && node src/importOld.js --once && node src/index.js
     healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
