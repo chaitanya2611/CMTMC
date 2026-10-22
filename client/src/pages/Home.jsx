@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { DisciplineTag, Avatar, Paragraphs, DateBlock, ExternalLink } from '../components/ui.jsx';
-import { HeroMedia, MotionToggle, HERO_CREDIT, ThemeVisual, Workflow } from '../components/SciMedia.jsx';
+import { HeroMedia, ThemeVisual, Workflow } from '../components/SciMedia.jsx';
 import { useApi, useSite, useTitle, fmtDate } from '../lib/hooks.js';
 
 const isPlaceholder = (txt) => /^\[/.test((txt || '').trim());
