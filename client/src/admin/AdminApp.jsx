@@ -35,7 +35,7 @@ function Login() {
   return (
     <div className="adm-login">
       <form className="adm-login__card" onSubmit={submit}>
-        <Link to="/" className="adm-login__brand"><Logo size={40} /><span>CMTMC admin</span></Link>
+        <Link to="/" className="adm-login__brand"><Logo size={36} /><span>Admin</span></Link>
         <h1>Sign in</h1>
         <div className="adm-field">
           <label htmlFor="login-email">Email</label>
@@ -64,7 +64,7 @@ function Shell() {
     <div className="adm">
       <aside className={`adm-side${menu ? ' is-open' : ''}`}>
         <div className="adm-side__top">
-          <Link to="/admin" className="adm-side__brand"><Logo size={30} /><span>CMTMC admin</span></Link>
+          <Link to="/admin" className="adm-side__brand"><Logo size={26} /><span>Admin</span></Link>
           <button className="adm-side__toggle" onClick={() => setMenu((m) => !m)} aria-expanded={menu}>{menu ? 'Close' : 'Menu'}</button>
         </div>
         <nav className="adm-nav" onClick={() => setMenu(false)}>

@@ -35,17 +35,40 @@ export default function Home() {
         <HeroMedia />
         <div className="hero__veil" aria-hidden="true" />
         <div className="shell hero__inner">
-          <p className="hero__eyebrow">Indian Institute of Technology Bombay</p>
-          <h1 className="hero__title">{name}</h1>
-          {s?.heroText && <p className="hero__text">{s.heroText}</p>}
-          <div className="hero__actions">
-            <Link className="btn btn--light" to="/research">Explore research</Link>
-            <Link className="btn btn--ghost" to="/about">About CMTMC</Link>
+          <div className="hero__content">
+            <p className="hero__eyebrow"><span aria-hidden="true" /> IIT Bombay · Interdisciplinary research</p>
+            <h1 className="hero__title">{name}</h1>
+            {s?.heroText && <p className="hero__text">{s.heroText}</p>}
+            <div className="hero__actions">
+              <Link className="btn btn--signal" to="/research">Explore our research <span aria-hidden="true">↗</span></Link>
+              <Link className="btn btn--ghost" to="/about">Discover CMTMC</Link>
+            </div>
           </div>
+          <aside className="hero__system" aria-label="CMTMC research domains">
+            <div className="hero__orb" aria-hidden="true">
+              <span className="hero__orb-core">C</span>
+              <span className="hero__orb-node hero__orb-node--a" />
+              <span className="hero__orb-node hero__orb-node--b" />
+              <span className="hero__orb-node hero__orb-node--c" />
+            </div>
+            <p className="hero__system-label">One discovery engine</p>
+            <ol>
+              <li><span>01</span> Traditional knowledge</li>
+              <li><span>02</span> Molecular intelligence</li>
+              <li><span>03</span> Catalytic discovery</li>
+            </ol>
+          </aside>
         </div>
         <div className="shell hero__foot">
-          <p className="hero__credit">{HERO_CREDIT}</p>
-          <MotionToggle />
+          <div className="hero__domains" aria-label="Research focus">
+            <span>Computational chemistry</span>
+            <span>Machine learning</span>
+            <span>Biological validation</span>
+          </div>
+          <div className="hero__media-controls">
+            <p className="hero__credit">{HERO_CREDIT}</p>
+            <MotionToggle />
+          </div>
         </div>
       </section>
 
@@ -54,12 +77,14 @@ export default function Home() {
           <div className="shell glance-strip__grid">
             {thrusts.data?.length > 0 && (
               <div className="glance">
-                <h2>Research themes</h2>
+                <p className="glance__count">{String(thrusts.data.length).padStart(2, '0')}</p>
+                <h2>Connected research programmes</h2>
                 <ul>{thrusts.data.map((t) => <li key={t._id}><Link to={`/research/${t._id}`}>{t.title}</Link></li>)}</ul>
               </div>
             )}
             {departments.length > 0 && (
               <div className="glance">
+                <p className="glance__count">{String(departments.length).padStart(2, '0')}</p>
                 <h2>Participating departments</h2>
                 <ul>{departments.map((d) => <li key={d}>{d}</li>)}</ul>
               </div>
@@ -74,7 +99,7 @@ export default function Home() {
           <div className="shell intro">
             <div>
               <p className="kicker">About the centre</p>
-              <h2 style={{ fontSize: 'clamp(1.6rem, 2.4vw, 2.1rem)' }}>Why CMTMC exists</h2>
+              <h2>Bridging ancestral knowledge and molecular intelligence.</h2>
             </div>
             <div className="intro__text">
               {s.about ? <Paragraphs text={s.about} limit={2} /> : <p>{s.mission}</p>}
