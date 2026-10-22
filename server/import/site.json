@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "mission": "We systematically decode, validate, and translate traditional medical knowledge into scientifically rigorous, AI-enabled therapeutic innovations that address complex diseases and advance global healthcare.",
+  "objectives": [
+    {
+      "title": "Transform Knowledge into Data",
+      "text": "Convert centuries of empirical traditional medicine into a data-driven, mechanism-informed discovery framework by embedding AI and ML across the full continuum of drug discovery."
+    },
+    {
+      "title": "Build Interdisciplinary Platforms",
+      "text": "Unite traditional medicine experts, chemists, biologists, clinicians, engineers, and data scientists around shared scientific questions to address complex, multifactorial diseases."
+    },
+    {
+      "title": "Accelerate Discovery",
+      "text": "Reduce uncertainty and improve reproducibility in early-stage therapeutic research through systematic validation and AI-driven hypothesis generation."
+    },
+    {
+      "title": "Ensure Ethical Impact",
+      "text": "Prioritize affordable, safe, and sustainable therapeutic strategies with transparent, reproducible, and equitable benefit-sharing while stewarding traditional knowledge responsibly."
+    },
+    {
+      "title": "Inform Global Health Policy",
+      "text": "Generate evidence that informs policy, regulation, and clinical translation aligned with national priorities and global health frameworks."
+    },
+    {
+      "title": "Establish Global Leadership",
+      "text": "Position IIT Bombay as the global reference point for AI-enabled, evidence-based traditional medicine research with enduring scientific platforms and translational outcomes."
+    }
+  ],
+  "closingStatement": "Through sustained institutional investment, open yet secure scientific infrastructure, and the training of interdisciplinary talent, we are building scientific systems that transform traditional medicine from largely empirical practice into a rigorous, data-driven discovery framework—accelerating innovation while maintaining ethical stewardship and ensuring equitable global health impact."
+}

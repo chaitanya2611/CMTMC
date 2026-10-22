@@ -13,6 +13,9 @@ const settingsSchema = new Schema({
   heroTitle: str(200), heroText: str(1000),
   about: str(4000), aboutMore: str(4000),
   mission: str(1000), vision: str(1000),
+  objectives: [{ _id: false, title: str(160), text: str(1500) }],
+  closingStatement: str(3000),
+  aboutContentVersion: { type: Number, default: 0, select: false },
   joinText: str(1500),
   email: str(200), phone: str(60), address: str(500),
   social: {

@@ -22,6 +22,7 @@ const GROUPS = [
     { name: 'aboutMore', label: 'About: second part', kind: 'textarea', rows: 6 },
     { name: 'mission', label: 'Mission', kind: 'textarea', rows: 3 },
     { name: 'vision', label: 'Vision', kind: 'textarea', rows: 3 },
+    { name: 'closingStatement', label: 'Closing statement', kind: 'textarea', rows: 6 },
   ] },
   { title: 'Contact & openings', fields: [
     { name: 'joinText', label: 'Introduction on the Openings page', kind: 'textarea', rows: 4 },
@@ -32,6 +33,7 @@ const GROUPS = [
 ];
 const SOCIAL = [['linkedin', 'LinkedIn'], ['twitter', 'X / Twitter'], ['github', 'GitHub'], ['youtube', 'YouTube']];
 const LISTS = [
+  { name: 'objectives', title: 'Objectives (About page, in order)', item: 'objective', cols: [['title', 'Objective'], ['text', 'Description']] },
   { name: 'stats', title: 'Key figures (About page)', item: 'figure', cols: [['value', 'Number'], ['label', 'Label']] },
   { name: 'pipeline', title: 'How a project runs (steps, in order)', item: 'step', cols: [['title', 'Step'], ['text', 'Description']] },
   { name: 'partners', title: 'Partners and collaborators', item: 'partner', cols: [['name', 'Name'], ['link', 'Website (https://…)']] },

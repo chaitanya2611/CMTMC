@@ -15,6 +15,7 @@ r.get('/', asyncHandler(async (req, res) => res.json(await getSettings())));
 r.put('/', requireAdmin, asyncHandler(async (req, res) => {
   const body = pick(Settings, req.body);
   delete body.key;
+  delete body.aboutContentVersion;
   const doc = await Settings.findOneAndUpdate({ key: 'site' }, body, { new: true, upsert: true, runValidators: true, setDefaultsOnInsert: true });
   res.json(doc);
 }));

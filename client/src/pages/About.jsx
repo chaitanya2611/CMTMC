@@ -16,12 +16,45 @@ export default function About() {
           </div>
           {(s.mission || s.vision) && (
             <div className="mv">
-              {s.mission && <div><h2>Mission</h2><p>{s.mission}</p></div>}
+              {s.mission && <div><h2>Our Mission</h2><p>{s.mission}</p></div>}
               {s.vision && <div><h2>Vision</h2><p>{s.vision}</p></div>}
             </div>
           )}
         </div>
       </section>
+
+      {s.objectives?.length > 0 && (
+        <section className="band band--tint">
+          <div className="shell">
+            <div className="band__head objectives__head">
+              <p className="kicker">Our priorities</p>
+              <h2>Objectives</h2>
+              <p>Six commitments guide how CMTMC turns knowledge into evidence, discovery and public benefit.</p>
+            </div>
+            <ol className="objectives">
+              {s.objectives.map((objective, i) => (
+                <li key={`${objective.title}-${i}`} className="objective">
+                  <span className="objective__number" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                  <div>
+                    <h3>{objective.title}</h3>
+                    <p>{objective.text}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      )}
+
+      {s.closingStatement && (
+        <section className="band about-closing">
+          <div className="shell about-closing__inner">
+            <p className="kicker">The long view</p>
+            <h2>Closing statement</h2>
+            <p>{s.closingStatement}</p>
+          </div>
+        </section>
+      )}
 
       {s.stats?.length > 0 && (
         <section className="band band--tint">
