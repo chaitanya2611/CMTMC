@@ -59,17 +59,6 @@ export default function Home() {
             </ol>
           </aside>
         </div>
-        <div className="shell hero__foot">
-          <div className="hero__domains" aria-label="Research focus">
-            <span>Computational chemistry</span>
-            <span>Machine learning</span>
-            <span>Biological validation</span>
-          </div>
-          <div className="hero__media-controls">
-            <p className="hero__credit">{HERO_CREDIT}</p>
-            <MotionToggle />
-          </div>
-        </div>
       </section>
 
       {(thrusts.data?.length > 0 || departments.length > 0) && (
