@@ -13,7 +13,7 @@ export default function News() {
 
   return (
     <>
-      <PageHead kicker="News" title="News and events" intro="Seminars, workshops, awards and announcements from the center." />
+      <PageHead kicker="News" title="News and events" />
       <section className="band">
         <div className="shell">
           <div className="segmented" role="group" aria-label="Filter by type">
