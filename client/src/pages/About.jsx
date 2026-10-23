@@ -47,7 +47,7 @@ export default function About() {
       {s.closingStatement && (
         <section className="band about-closing">
           <div className="shell about-closing__inner">
-            <h2>Closing statement</h2>
+            <h2>The long view</h2>
             <p>{s.closingStatement}</p>
           </div>
         </section>
