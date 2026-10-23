@@ -99,7 +99,7 @@ export default function Home() {
         <section className="band band--white">
           <div className="shell">
             <div className="band__head band__head--split">
-              <div><p className="kicker">Research</p><h2>Research themes</h2></div>
+              <div><h2>Research themes</h2></div>
               <Link className="more" to="/research">All research and platforms</Link>
             </div>
             <ol className="themes">
@@ -126,7 +126,7 @@ export default function Home() {
       {featured.length > 0 && (
         <section className="band">
           <div className="shell">
-            <div className="band__head"><p className="kicker">Featured research</p><h2>Selected recent work</h2></div>
+            <div className="band__head"><h2>Selected recent work</h2></div>
             <div className="features">
               {featured.map((p) => (
                 <article key={p._id} className="feature">
@@ -146,7 +146,7 @@ export default function Home() {
         <section className="band band--tint">
           <div className="shell">
             <div className="band__head band__head--split">
-              <div><p className="kicker">People</p><h2>Faculty</h2></div>
+              <div><h2>Faculty</h2></div>
               <Link className="more" to="/people">All people</Link>
             </div>
             <ul className="portraits">
@@ -171,7 +171,6 @@ export default function Home() {
         <section className="band band--white">
           <div className="shell sechead">
             <div className="sechead__label">
-              <p className="kicker">Publications</p>
               <h2>Recent publications</h2>
               <Link className="more" to="/publications">View all publications</Link>
             </div>
@@ -199,7 +198,7 @@ export default function Home() {
         <div className="shell twocol">
           <div>
             <div className="band__head band__head--split">
-              <div><p className="kicker">News</p><h2>News and events</h2></div>
+              <div><h2>News and events</h2></div>
               <Link className="more" to="/news">All news</Link>
             </div>
             {realNews.length ? (
@@ -238,7 +237,7 @@ export default function Home() {
       {s?.partners?.length > 0 && (
         <section className="band band--white">
           <div className="shell">
-            <div className="band__head"><p className="kicker">Collaborations</p><h2>Partners and affiliations</h2></div>
+            <div className="band__head"><h2>Partners and affiliations</h2></div>
             <ul className="partners">
               {s.partners.map((p, i) => <li key={i}><ExternalLink href={p.link}>{p.name}</ExternalLink></li>)}
             </ul>

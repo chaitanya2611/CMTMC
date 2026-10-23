@@ -49,7 +49,6 @@ export default function Research() {
         <section className="band band--white">
           <div className="shell">
             <div className="band__head">
-              <p className="kicker">Resources</p>
               <h2>Platforms and tools</h2>
               <p>Databases, models and software developed at the center.</p>
             </div>

@@ -169,7 +169,6 @@ a { color: inherit; }
 
 /* dark band: research workflow */
 .band--dark { background: #0A1524; color: #E6EBF0; }
-.band--dark .kicker { color: #D9B56A; }
 .band--dark h2 { color: #FBFAF6; }
 .band--dark .band__head p:not(.kicker) { color: rgba(230,235,240,.75); }
 .workflow { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; border-top: 1px solid rgba(230,235,240,.16); }
@@ -623,7 +622,6 @@ body {
 .objective p { color: var(--ink-soft); line-height: 1.7; }
 .about-closing { background: var(--navy); color: rgba(252,253,247,.8); }
 .about-closing__inner { max-width: 980px; }
-.about-closing .kicker { color: var(--signal); }
 .about-closing h2 { max-width: 16em; margin-bottom: 24px; color: var(--white); font-size: clamp(2.2rem, 4.5vw, 4.4rem); font-weight: 500; letter-spacing: -.03em; }
 .about-closing__inner > p:last-child { max-width: 60em; font-size: clamp(1.08rem, 1.7vw, 1.3rem); line-height: 1.75; }
 .platforms { overflow: hidden; border-collapse: separate; border-spacing: 0; border: 1px solid var(--rule); border-radius: 18px; background: var(--white); }
@@ -637,7 +635,6 @@ body {
 .colophon { padding-top: 0; background: #082A23; }
 .colophon__lead { display: flex; justify-content: space-between; align-items: flex-end; gap: 36px; padding-block: 72px; border-bottom: 1px solid rgba(255,255,255,.16); }
 .colophon__lead h2 { max-width: 18em; margin-top: 10px; color: #F3F7E9; font-size: clamp(2rem, 4vw, 4rem); font-weight: 500; letter-spacing: -.03em; }
-.colophon__lead .kicker { color: var(--signal); }
 .colophon__grid { padding-top: 56px; }
 .colophon__short { color: var(--signal); font-family: var(--sans); font-weight: 750; letter-spacing: .12em; }
 

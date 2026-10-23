@@ -52,7 +52,7 @@ export default function ResearchDetail() {
       {papers.length > 0 && (
         <section className="band band--white">
           <div className="shell">
-            <div className="band__head"><p className="kicker">Publications</p><h2>Representative publications</h2></div>
+            <div className="band__head"><h2>Representative publications</h2></div>
             <ol className="citations">{papers.map((p) => <PubItem key={p._id} p={p} onZoom={setZoom} />)}</ol>
           </div>
         </section>

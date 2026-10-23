@@ -47,7 +47,6 @@ export default function About() {
       {s.closingStatement && (
         <section className="band about-closing">
           <div className="shell about-closing__inner">
-            <p className="kicker">The long view</p>
             <h2>Closing statement</h2>
             <p>{s.closingStatement}</p>
           </div>
@@ -57,7 +56,7 @@ export default function About() {
       {s.pipeline?.length > 0 && (
         <section className="band">
           <div className="shell">
-            <div className="band__head"><p className="kicker">Workflow</p><h2>How a project runs</h2></div>
+            <div className="band__head"><h2>How a project runs</h2></div>
             <Pipeline steps={s.pipeline} />
           </div>
         </section>
@@ -66,7 +65,7 @@ export default function About() {
       {s.partners?.length > 0 && (
         <section className="band">
           <div className="shell">
-            <div className="band__head"><p className="kicker">Partners</p><h2>Partners and collaborators</h2></div>
+            <div className="band__head"><h2>Partners and collaborators</h2></div>
             <ul className="partners">
               {s.partners.map((p, i) => <li key={i}><ExternalLink href={p.link}>{p.name}</ExternalLink></li>)}
             </ul>

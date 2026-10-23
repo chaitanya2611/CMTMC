@@ -76,7 +76,6 @@ export default function SiteLayout() {
       <footer className="colophon">
         <div className="shell colophon__lead">
           <div>
-            <p className="kicker">Work with CMTMC</p>
             <h2>Turn complex molecular questions into collaborative research.</h2>
           </div>
           <Link className="btn btn--light" to="/contact">Start a conversation <span aria-hidden="true">↗</span></Link>

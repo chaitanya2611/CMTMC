@@ -68,7 +68,7 @@ export default function People() {
       {alumni.length > 0 && (
         <section className="band band--tint">
           <div className="shell">
-            <div className="band__head"><p className="kicker">Alumni</p><h2>Former members</h2></div>
+            <div className="band__head"><h2>Former members</h2></div>
             <ul className="alumni">
               {alumni.map((p) => (
                 <li key={p._id}>
