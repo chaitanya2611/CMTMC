@@ -27,9 +27,7 @@ export default function About() {
         <section className="band band--tint">
           <div className="shell">
             <div className="band__head objectives__head">
-              <p className="kicker">Our priorities</p>
               <h2>Objectives</h2>
-              <p>Six commitments guide how CMTMC turns knowledge into evidence, discovery and public benefit.</p>
             </div>
             <ol className="objectives">
               {s.objectives.map((objective, i) => (
