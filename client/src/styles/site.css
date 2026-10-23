@@ -379,11 +379,6 @@ a { color: inherit; }
 .mv h2 { font-size: var(--t-lg); margin-bottom: 8px; }
 .mv p { color: var(--ink-soft); }
 @media (max-width: 900px) { .about { grid-template-columns: 1fr; gap: 40px; } .mv { border-left: 0; padding-left: 0; border-top: 1px solid var(--rule); padding-top: 24px; } }
-.figures { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin: 0; border-top: 1px solid var(--rule-strong); }
-.figures > div { padding: 20px 20px 20px 0; display: flex; flex-direction: column-reverse; gap: 4px; border-bottom: 1px solid var(--rule); }
-.figures dd { margin: 0; font: 400 2.2rem/1 var(--serif); color: var(--navy); font-variant-numeric: tabular-nums; }
-.figures dt { color: var(--ink-soft); font-size: .97rem; }
-
 /* ---------- modal ---------- */
 .modal { border: 1px solid var(--rule); padding: 0; border-radius: var(--r); width: min(820px, calc(100vw - 32px)); max-height: calc(100vh - 48px); background: var(--white); color: var(--ink); }
 .modal::backdrop { background: rgba(20, 35, 63, .6); }
@@ -635,8 +630,6 @@ body {
 .about-closing .kicker { color: var(--signal); }
 .about-closing h2 { max-width: 16em; margin-bottom: 24px; color: var(--white); font-size: clamp(2.2rem, 4.5vw, 4.4rem); font-weight: 500; letter-spacing: -.03em; }
 .about-closing__inner > p:last-child { max-width: 60em; font-size: clamp(1.08rem, 1.7vw, 1.3rem); line-height: 1.75; }
-.figures { gap: 12px; border: 0; }
-.figures > div { padding: 24px; border: 1px solid var(--rule); border-radius: 18px; background: var(--white); }
 .platforms { overflow: hidden; border-collapse: separate; border-spacing: 0; border: 1px solid var(--rule); border-radius: 18px; background: var(--white); }
 .platforms th, .platforms td { padding: 18px 20px; }
 .albums { gap: 28px 20px; }

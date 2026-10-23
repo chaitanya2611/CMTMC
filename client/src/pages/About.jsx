@@ -54,18 +54,6 @@ export default function About() {
         </section>
       )}
 
-      {s.stats?.length > 0 && (
-        <section className="band band--tint">
-          <div className="shell">
-            <dl className="figures">
-              {s.stats.map((x, i) => (
-                <div key={i}><dt>{x.label}</dt><dd>{x.value}</dd></div>
-              ))}
-            </dl>
-          </div>
-        </section>
-      )}
-
       {s.pipeline?.length > 0 && (
         <section className="band">
           <div className="shell">

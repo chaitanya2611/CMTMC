@@ -34,7 +34,6 @@ const GROUPS = [
 const SOCIAL = [['linkedin', 'LinkedIn'], ['twitter', 'X / Twitter'], ['github', 'GitHub'], ['youtube', 'YouTube']];
 const LISTS = [
   { name: 'objectives', title: 'Objectives (About page, in order)', item: 'objective', cols: [['title', 'Objective'], ['text', 'Description']] },
-  { name: 'stats', title: 'Key figures (About page)', item: 'figure', cols: [['value', 'Number'], ['label', 'Label']] },
   { name: 'pipeline', title: 'How a project runs (steps, in order)', item: 'step', cols: [['title', 'Step'], ['text', 'Description']] },
   { name: 'partners', title: 'Partners and collaborators', item: 'partner', cols: [['name', 'Name'], ['link', 'Website (https://…)']] },
 ];
