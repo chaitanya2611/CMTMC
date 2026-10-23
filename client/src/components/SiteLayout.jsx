@@ -11,8 +11,6 @@ const NAV = [
   ['/publications', 'Publications'],
   ['/gallery', 'Gallery'],
   ['/news', 'News'],
-  ['/openings', 'Opportunities'],
-  ['/contact', 'Contact'],
 ];
 
 function Banner({ s }) {
@@ -50,7 +48,6 @@ export default function SiteLayout() {
           <span className="utility__focus" aria-hidden="true">AI × Chemistry × Traditional Medicine</span>
           <span className="utility__links">
             {s.email && <a href={`mailto:${s.email}`}>{s.email}</a>}
-            <Link to="/contact">Contact</Link>
           </span>
         </div>
       </div>
@@ -62,9 +59,10 @@ export default function SiteLayout() {
           <nav id="site-nav" className="mainnav" aria-label="Main">
             <div className="mainnav__row">
               {NAV.map(([to, label, end]) => <NavLink key={to} to={to} end={end}>{label}</NavLink>)}
+              <NavLink className="mainnav__join" to="/openings">Join us</NavLink>
             </div>
           </nav>
-          <Link className="masthead__cta" to="/openings">Join the center <span aria-hidden="true">↗</span></Link>
+          <Link className="masthead__cta" to="/openings">Join us <span aria-hidden="true">↗</span></Link>
           <button className="menu-toggle" aria-expanded={open} aria-controls="site-nav" onClick={() => setOpen((o) => !o)}>
             <span aria-hidden="true" className="menu-toggle__bars" />{open ? 'Close' : 'Menu'}
           </button>
