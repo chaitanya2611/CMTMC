@@ -17,11 +17,6 @@ export default function Home() {
   const openings = useApi('/openings');
 
   const faculty = useMemo(() => (people.data || []).filter((p) => p.group === 'Faculty' && !isPlaceholder(p.name)), [people.data]);
-  const departments = useMemo(() => {
-    const set = new Set();
-    faculty.forEach((p) => { const m = (p.role || '').split(',').slice(1).join(',').trim(); if (m) set.add(m); });
-    return [...set];
-  }, [faculty]);
   const realPubs = (pubs.data || []).filter((p) => !isPlaceholder(p.title));
   const featured = realPubs.filter((p) => p.featured).slice(0, 3);
   const recent = realPubs.slice(0, 5);
@@ -61,23 +56,14 @@ export default function Home() {
         </div>
       </section>
 
-      {(thrusts.data?.length > 0 || departments.length > 0) && (
+      {thrusts.data?.length > 0 && (
         <section className="glance-strip" aria-label="At a glance">
           <div className="shell glance-strip__grid">
-            {thrusts.data?.length > 0 && (
-              <div className="glance">
-                <p className="glance__count">{String(thrusts.data.length).padStart(2, '0')}</p>
-                <h2>Connected research programmes</h2>
-                <ul>{thrusts.data.map((t) => <li key={t._id}><Link to={`/research/${t._id}`}>{t.title}</Link></li>)}</ul>
-              </div>
-            )}
-            {departments.length > 0 && (
-              <div className="glance">
-                <p className="glance__count">{String(departments.length).padStart(2, '0')}</p>
-                <h2>Participating departments</h2>
-                <ul>{departments.map((d) => <li key={d}>{d}</li>)}</ul>
-              </div>
-            )}
+            <div className="glance">
+              <p className="glance__count">{String(thrusts.data.length).padStart(2, '0')}</p>
+              <h2>Connected research programmes</h2>
+              <ul>{thrusts.data.map((t) => <li key={t._id}><Link to={`/research/${t._id}`}>{t.title}</Link></li>)}</ul>
+            </div>
           </div>
         </section>
       )}

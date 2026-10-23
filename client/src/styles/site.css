@@ -569,7 +569,7 @@ body {
 
 /* data strip */
 .glance-strip { background: var(--paper); border: 0; }
-.glance-strip__grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 18px; padding-block: 22px 68px; }
+.glance-strip__grid { grid-template-columns: 1fr; gap: 18px; padding-block: 22px 68px; }
 .glance { position: relative; padding: 28px 30px; border: 1px solid rgba(16,61,50,.14); border-radius: 22px; background: rgba(252,253,247,.84); box-shadow: 0 18px 45px rgba(16,61,50,.055); overflow: hidden; }
 .glance::after { content: ""; position: absolute; right: -45px; top: -55px; width: 150px; height: 150px; border-radius: 50%; border: 28px solid rgba(214,242,74,.13); }
 .glance__count { font: 500 2.8rem/1 var(--serif); color: var(--navy); }
