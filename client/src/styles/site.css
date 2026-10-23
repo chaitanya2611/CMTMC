@@ -480,7 +480,11 @@ a { color: inherit; }
 /* ---------- footer ---------- */
 .colophon { background: var(--navy); color: #C9D0DC; padding-top: 56px; font-size: .95rem; }
 .colophon__grid { display: grid; grid-template-columns: minmax(0, 4fr) repeat(3, minmax(0, 2.2fr)); gap: 40px; padding-bottom: 44px; }
-.colophon__short { font: 600 1.6rem/1 var(--serif); color: #fff; }
+.colophon__logos { display: flex; align-items: center; gap: 16px; width: max-content; max-width: 100%; padding: 12px 16px; border-radius: 16px; background: #fff; box-shadow: 0 14px 34px rgba(0,0,0,.14); }
+.colophon__logo { display: block; object-fit: contain; }
+.colophon__logo--iitb { width: 72px; height: 72px; }
+.colophon__logo--cmtmc { width: 190px; height: 72px; }
+.colophon__logo-divider { width: 1px; height: 52px; background: #D5DDD9; }
 .colophon__name { margin-top: 10px; color: #E3E7EE; max-width: 26em; line-height: 1.45; }
 .colophon__addr { margin-top: 14px; white-space: pre-line; line-height: 1.6; }
 .colophon__h { font: 600 var(--t-xs)/1.3 var(--sans); letter-spacing: .1em; text-transform: uppercase; color: #fff; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,.18); }
@@ -632,7 +636,6 @@ body {
 .colophon__lead { display: flex; justify-content: space-between; align-items: flex-end; gap: 36px; padding-block: 72px; border-bottom: 1px solid rgba(255,255,255,.16); }
 .colophon__lead h2 { max-width: 18em; margin-top: 10px; color: #F3F7E9; font-size: clamp(2rem, 4vw, 4rem); font-weight: 500; letter-spacing: -.03em; }
 .colophon__grid { padding-top: 56px; }
-.colophon__short { color: var(--signal); font-family: var(--sans); font-weight: 750; letter-spacing: .12em; }
 
 @media (max-width: 1180px) {
   .utility__focus { display: none; }
@@ -664,6 +667,10 @@ body {
   .utility__links a:first-child { display: none; }
   .masthead__row { min-height: 74px; }
   .wordmark .logo { --logo-height: 36px !important; width: calc(var(--logo-height) * 4.5); height: var(--logo-height); }
+  .colophon__logos { gap: 10px; padding: 10px 12px; }
+  .colophon__logo--iitb { width: 58px; height: 58px; }
+  .colophon__logo--cmtmc { width: 145px; height: 58px; }
+  .colophon__logo-divider { height: 42px; }
   .wordmark__name { display: none; }
   .hero { min-height: calc(100vh - 108px); }
   .hero__inner { display: flex; padding-block: 120px 36px; }

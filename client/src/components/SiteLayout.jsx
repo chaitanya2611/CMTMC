@@ -82,7 +82,11 @@ export default function SiteLayout() {
         </div>
         <div className="shell colophon__grid">
           <div className="colophon__id">
-            <p className="colophon__short">{s.shortName || 'CMTMC'}</p>
+            <div className="colophon__logos" aria-label="IIT Bombay and CMTMC">
+              <img className="colophon__logo colophon__logo--iitb" src="/iit-bombay-logo.png" alt="Indian Institute of Technology Bombay" />
+              <span className="colophon__logo-divider" aria-hidden="true" />
+              <img className="colophon__logo colophon__logo--cmtmc" src="/cmtmc-logo.png" alt="CMTMC" />
+            </div>
             <p className="colophon__name">{fullName}</p>
             <p className="colophon__addr">{s.address && !/^Add your/i.test(s.address) ? s.address : 'Indian Institute of Technology Bombay\nPowai, Mumbai, Maharashtra 400076\nIndia'}</p>
           </div>
