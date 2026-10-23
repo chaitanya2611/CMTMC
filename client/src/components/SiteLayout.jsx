@@ -152,7 +152,6 @@ export default function SiteLayout() {
         </div>
         <div className="shell colophon__base">
           <span>© {new Date().getFullYear()} {s.shortName || 'CMTMC'}, Indian Institute of Technology Bombay</span>
-          <Link to="/admin">Staff sign in</Link>
         </div>
       </footer>
     </SiteContext.Provider>
