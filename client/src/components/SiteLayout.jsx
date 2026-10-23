@@ -72,7 +72,7 @@ export default function SiteLayout() {
                   aria-expanded={peopleOpen} aria-controls="people-submenu"
                   onClick={() => setPeopleOpen((value) => !value)}
                   onKeyDown={(event) => { if (event.key === 'Escape') setPeopleOpen(false); }}>
-                  People <span aria-hidden="true">⌄</span>
+                  People
                 </button>
                 <div id="people-submenu" className="mainnav__submenu">
                   {PEOPLE_NAV.map(([to, label]) => <NavLink key={to} to={to}>{label}</NavLink>)}
