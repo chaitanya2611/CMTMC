@@ -483,7 +483,7 @@ a { color: inherit; }
 .colophon__logos { display: flex; align-items: center; gap: 16px; width: max-content; max-width: 100%; padding: 12px 16px; border-radius: 16px; background: #fff; box-shadow: 0 14px 34px rgba(0,0,0,.14); }
 .colophon__logo { display: block; object-fit: contain; }
 .colophon__logo--iitb { width: 72px; height: 72px; }
-.colophon__logo--cmtmc { width: 190px; height: 72px; }
+.colophon__cmtmc-logo { display: block; width: 234px; flex: none; }
 .colophon__logo-divider { width: 1px; height: 52px; background: #D5DDD9; }
 .colophon__name { margin-top: 10px; color: #E3E7EE; max-width: 26em; line-height: 1.45; }
 .colophon__addr { margin-top: 14px; white-space: pre-line; line-height: 1.6; }
@@ -669,7 +669,8 @@ body {
   .wordmark .logo { --logo-height: 36px !important; width: calc(var(--logo-height) * 4.5); height: var(--logo-height); }
   .colophon__logos { gap: 10px; padding: 10px 12px; }
   .colophon__logo--iitb { width: 58px; height: 58px; }
-  .colophon__logo--cmtmc { width: 145px; height: 58px; }
+  .colophon__cmtmc-logo { width: 180px; }
+  .colophon__cmtmc-logo .logo { --logo-height: 40px !important; width: 180px; height: 40px; }
   .colophon__logo-divider { height: 42px; }
   .wordmark__name { display: none; }
   .hero { min-height: calc(100vh - 108px); }
