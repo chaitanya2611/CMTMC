@@ -13,13 +13,13 @@ const NAV = [
 ];
 
 const PEOPLE_NAV = [
-  ['/people/faculty', 'Faculty'],
-  ['/people/scientists-postdocs', 'Scientists & Postdocs'],
-  ['/people/phd', 'PhD'],
-  ['/people/mtech-msc', 'MTech–MSc'],
-  ['/people/undergraduate', 'Undergraduate Researchers'],
-  ['/people/project-staff', 'Project Staff'],
-  ['/people/alumni', 'Alumni'],
+  ['/people/faculty', 'Faculty', 'Faculty'],
+  ['/people/scientists-postdocs', 'Scientists & Postdocs', 'Scientists & postdocs'],
+  ['/people/phd', 'PhD', 'PhD students'],
+  ['/people/mtech-msc', 'MTech–MSc', 'MTech & MSc students'],
+  ['/people/undergraduate', 'Undergraduate Researchers', 'Undergraduate researchers'],
+  ['/people/project-staff', 'Project Staff', 'Project staff'],
+  ['/people/alumni', 'Alumni', 'Alumni'],
 ];
 
 function Banner({ s }) {
@@ -39,6 +39,7 @@ function Banner({ s }) {
 
 export default function SiteLayout() {
   const { data: settings, reload } = useApi('/settings');
+  const { data: people } = useApi('/people');
   const [open, setOpen] = useState(false);
   const [peopleOpen, setPeopleOpen] = useState(false);
   const { pathname } = useLocation();
@@ -47,6 +48,9 @@ export default function SiteLayout() {
 
   const s = settings || {};
   const fullName = s.name || 'Center for Machine Learning–Driven Traditional Medicine and Catalysis';
+  const visiblePeopleNav = people
+    ? PEOPLE_NAV.filter(([, , group]) => people.some((person) => person.group === group))
+    : [];
 
   return (
     <SiteContext.Provider value={{ settings, reload }}>
@@ -69,18 +73,20 @@ export default function SiteLayout() {
           <nav id="site-nav" className="mainnav" aria-label="Main">
             <div className="mainnav__row">
               {NAV.slice(0, 3).map(([to, label, end]) => <NavLink key={to} to={to} end={end}>{label}</NavLink>)}
-              <div className={`mainnav__dropdown${peopleOpen ? ' is-open' : ''}`}
-                onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setPeopleOpen(false); }}>
-                <button type="button" className={`mainnav__trigger${pathname.startsWith('/people') ? ' active' : ''}`}
-                  aria-expanded={peopleOpen} aria-controls="people-submenu"
-                  onClick={() => setPeopleOpen((value) => !value)}
-                  onKeyDown={(event) => { if (event.key === 'Escape') setPeopleOpen(false); }}>
-                  People
-                </button>
-                <div id="people-submenu" className="mainnav__submenu">
-                  {PEOPLE_NAV.map(([to, label]) => <NavLink key={to} to={to}>{label}</NavLink>)}
+              {visiblePeopleNav.length > 0 && (
+                <div className={`mainnav__dropdown${peopleOpen ? ' is-open' : ''}`}
+                  onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setPeopleOpen(false); }}>
+                  <button type="button" className={`mainnav__trigger${pathname.startsWith('/people') ? ' active' : ''}`}
+                    aria-expanded={peopleOpen} aria-controls="people-submenu"
+                    onClick={() => setPeopleOpen((value) => !value)}
+                    onKeyDown={(event) => { if (event.key === 'Escape') setPeopleOpen(false); }}>
+                    People
+                  </button>
+                  <div id="people-submenu" className="mainnav__submenu">
+                    {visiblePeopleNav.map(([to, label]) => <NavLink key={to} to={to}>{label}</NavLink>)}
+                  </div>
                 </div>
-              </div>
+              )}
               {NAV.slice(3).map(([to, label, end]) => <NavLink key={to} to={to} end={end}>{label}</NavLink>)}
               <NavLink className="mainnav__join" to="/openings">Join us</NavLink>
             </div>
