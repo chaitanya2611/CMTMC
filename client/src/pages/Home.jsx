@@ -146,8 +146,8 @@ export default function Home() {
         <section className="band band--tint">
           <div className="shell">
             <div className="band__head band__head--split">
-              <div><h2>Faculties</h2></div>
-              <Link className="more" to="/people/faculty">All faculties</Link>
+              <div><h2>Faculty</h2></div>
+              <Link className="more" to="/people/faculty">All faculty</Link>
             </div>
             <ul className="portraits">
               {faculty.slice(0, 6).map((p) => (
