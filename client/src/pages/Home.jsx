@@ -31,7 +31,6 @@ export default function Home() {
         <div className="hero__veil" aria-hidden="true" />
         <div className="shell hero__inner">
           <div className="hero__content">
-            <p className="hero__eyebrow"><span aria-hidden="true" /> IIT Bombay · Interdisciplinary research</p>
             <h1 className="hero__title">{name}</h1>
             {s?.heroText && <p className="hero__text">{s.heroText}</p>}
             <div className="hero__actions">
