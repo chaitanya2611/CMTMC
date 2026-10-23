@@ -44,15 +44,6 @@ export default function About() {
         </section>
       )}
 
-      {s.closingStatement && (
-        <section className="band about-closing">
-          <div className="shell about-closing__inner">
-            <h2>The long view</h2>
-            <p>{s.closingStatement}</p>
-          </div>
-        </section>
-      )}
-
       {s.pipeline?.length > 0 && (
         <section className="band">
           <div className="shell">

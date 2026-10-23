@@ -620,10 +620,6 @@ body {
 .objective__number { display: grid; place-items: center; align-self: start; width: 46px; height: 46px; border-radius: 50%; background: var(--signal-soft); color: var(--navy); font-size: .78rem; font-weight: 750; letter-spacing: .08em; }
 .objective h3 { margin: 3px 0 10px; color: var(--navy); font: 600 clamp(1.15rem, 2vw, 1.45rem)/1.25 var(--serif); }
 .objective p { color: var(--ink-soft); line-height: 1.7; }
-.about-closing { background: var(--navy); color: rgba(252,253,247,.8); }
-.about-closing__inner { max-width: 980px; }
-.about-closing h2 { max-width: 16em; margin-bottom: 24px; color: var(--white); font-size: clamp(2.2rem, 4.5vw, 4.4rem); font-weight: 500; letter-spacing: -.03em; }
-.about-closing__inner > p:last-child { max-width: 60em; font-size: clamp(1.08rem, 1.7vw, 1.3rem); line-height: 1.75; }
 .platforms { overflow: hidden; border-collapse: separate; border-spacing: 0; border: 1px solid var(--rule); border-radius: 18px; background: var(--white); }
 .platforms th, .platforms td { padding: 18px 20px; }
 .albums { gap: 28px 20px; }

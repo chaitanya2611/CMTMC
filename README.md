@@ -15,7 +15,7 @@ Website for the **Center for Machine Learning–Driven Traditional Medicine and 
 
 | Section | What the admin can do |
 |---|---|
-| Site settings | Center name, home-page headline, about text, mission, objectives, closing statement, contact details, social links, key figures, project steps, partners |
+| Site settings | Center name, home-page headline, about text, mission, objectives, contact details, social links, key figures, project steps, partners |
 | Research thrusts | Add, edit, reorder and delete; set the lead discipline (AI/ML, Chemistry or Biology), keywords and an image |
 | Platforms | Databases, models and tools with a status (Planned, Beta or Live) |
 | People | Photo upload, group (Faculty, PhD students and so on), bio, interests, profile and Google Scholar links, display order |
