@@ -4,7 +4,7 @@ import { PageHead, Avatar, Loading, ErrorNote, Empty, Modal, Paragraphs } from '
 import { useApi } from '../lib/hooks.js';
 
 const SECTIONS = {
-  faculty: { title: 'Faculty', group: 'Faculty', empty: 'Faculty profiles will be listed here soon.' },
+  faculty: { title: 'Faculties', group: 'Faculty', empty: 'Faculty profiles will be listed here soon.' },
   'scientists-postdocs': { title: 'Scientists & Postdocs', group: 'Scientists & postdocs', empty: 'Scientist and postdoctoral profiles will be listed here soon.' },
   phd: { title: 'PhD Students', group: 'PhD students', empty: 'PhD student profiles will be listed here soon.' },
   'mtech-msc': { title: 'MTech–MSc Students', group: 'MTech & MSc students', empty: 'MTech and MSc student profiles will be listed here soon.' },
