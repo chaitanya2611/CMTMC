@@ -147,12 +147,12 @@ export default function Home() {
           <div className="shell">
             <div className="band__head band__head--split">
               <div><h2>Faculty</h2></div>
-              <Link className="more" to="/people">All people</Link>
+              <Link className="more" to="/people/faculty">All faculty</Link>
             </div>
             <ul className="portraits">
               {faculty.slice(0, 6).map((p) => (
                 <li key={p._id}>
-                  <Link to="/people" className="person">
+                  <Link to="/people/faculty" className="person">
                     <span className="person__img"><Avatar name={p.name} src={p.photo} /></span>
                     <span>
                       <span className="person__name">{p.name}</span><br />

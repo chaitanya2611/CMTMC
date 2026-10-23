@@ -1,8 +1,14 @@
 import { useState } from 'react';
+import { Navigate, useParams } from 'react-router-dom';
 import { PageHead, Avatar, Loading, ErrorNote, Empty, Modal, Paragraphs } from '../components/ui.jsx';
 import { useApi } from '../lib/hooks.js';
 
-const ORDER = ['Faculty', 'Scientists & postdocs', 'PhD students', 'MTech & MSc students', 'Undergraduate researchers', 'Project staff'];
+const SECTIONS = {
+  faculty: { title: 'Faculty', group: 'Faculty', empty: 'Faculty profiles will be listed here soon.' },
+  'mtech-msc': { title: 'MTech–MSc Students', group: 'MTech & MSc students', empty: 'MTech and MSc student profiles will be listed here soon.' },
+  phd: { title: 'PhD Students', group: 'PhD students', empty: 'PhD student profiles will be listed here soon.' },
+  alumni: { title: 'Alumni', group: 'Alumni', empty: 'Alumni profiles will be listed here soon.' },
+};
 
 function Person({ p, onOpen }) {
   return (
@@ -41,36 +47,32 @@ function Bio({ p }) {
 }
 
 export default function People() {
+  const { section } = useParams();
+  const config = SECTIONS[section];
   const { data, error, loading, reload } = useApi('/people');
   const [open, setOpen] = useState(null);
-  const groups = ORDER.map((g) => [g, (data || []).filter((p) => p.group === g)]).filter(([, list]) => list.length);
-  const alumni = (data || []).filter((p) => p.group === 'Alumni');
+
+  if (!config) return <Navigate to="/people/faculty" replace />;
+
+  const people = (data || []).filter((p) => p.group === config.group);
+  const isAlumni = config.group === 'Alumni';
 
   return (
     <>
-      <PageHead kicker="People" title="People" intro="Faculty, researchers and students working across chemistry, biology and machine learning." />
+      <PageHead title={config.title} crumbs={[["/people/faculty", "People"], [null, config.title]]} />
       <section className="band">
         <div className="shell">
           {loading && <Loading />}
           {error && <ErrorNote error={error} onRetry={reload} />}
-          {data && !data.length && <Empty>Team members will be listed here soon.</Empty>}
-          {groups.map(([g, list]) => (
-            <section key={g} className="people-group" aria-labelledby={`g-${g}`}>
-              <h2 id={`g-${g}`}>{g} <small>{list.length}</small></h2>
-              <ul className={`portraits${g === 'Faculty' ? ' portraits--lead' : ''}`}>
-                {list.map((p) => <Person key={p._id} p={p} onOpen={setOpen} />)}
-              </ul>
-            </section>
-          ))}
-        </div>
-      </section>
-
-      {alumni.length > 0 && (
-        <section className="band band--tint">
-          <div className="shell">
-            <div className="band__head"><h2>Former members</h2></div>
+          {data && !people.length && <Empty>{config.empty}</Empty>}
+          {!isAlumni && people.length > 0 && (
+            <ul className={`portraits${config.group === 'Faculty' ? ' portraits--lead' : ''}`}>
+              {people.map((p) => <Person key={p._id} p={p} onOpen={setOpen} />)}
+            </ul>
+          )}
+          {isAlumni && people.length > 0 && (
             <ul className="alumni">
-              {alumni.map((p) => (
+              {people.map((p) => (
                 <li key={p._id}>
                   <button type="button" className="alum" onClick={() => setOpen(p)} aria-haspopup="dialog">
                     <Avatar name={p.name} src={p.photo} size="sm" />
@@ -81,9 +83,9 @@ export default function People() {
                 </li>
               ))}
             </ul>
-          </div>
-        </section>
-      )}
+          )}
+        </div>
+      </section>
 
       <Modal open={Boolean(open)} onClose={() => setOpen(null)} label={open ? `Profile of ${open.name}` : 'Profile'}>
         {open && <Bio p={open} />}

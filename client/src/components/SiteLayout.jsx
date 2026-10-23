@@ -7,10 +7,16 @@ const NAV = [
   ['/', 'Home', true],
   ['/about', 'About'],
   ['/research', 'Research'],
-  ['/people', 'People'],
   ['/publications', 'Publications'],
   ['/gallery', 'Gallery'],
   ['/news', 'News'],
+];
+
+const PEOPLE_NAV = [
+  ['/people/faculty', 'Faculty'],
+  ['/people/mtech-msc', 'MTech–MSc'],
+  ['/people/phd', 'PhD'],
+  ['/people/alumni', 'Alumni'],
 ];
 
 function Banner({ s }) {
@@ -31,9 +37,10 @@ function Banner({ s }) {
 export default function SiteLayout() {
   const { data: settings, reload } = useApi('/settings');
   const [open, setOpen] = useState(false);
+  const [peopleOpen, setPeopleOpen] = useState(false);
   const { pathname } = useLocation();
 
-  useEffect(() => { setOpen(false); window.scrollTo(0, 0); }, [pathname]);
+  useEffect(() => { setOpen(false); setPeopleOpen(false); window.scrollTo(0, 0); }, [pathname]);
 
   const s = settings || {};
   const fullName = s.name || 'Center for Machine Learning–Driven Traditional Medicine and Catalysis';
@@ -58,7 +65,20 @@ export default function SiteLayout() {
           </Link>
           <nav id="site-nav" className="mainnav" aria-label="Main">
             <div className="mainnav__row">
-              {NAV.map(([to, label, end]) => <NavLink key={to} to={to} end={end}>{label}</NavLink>)}
+              {NAV.slice(0, 3).map(([to, label, end]) => <NavLink key={to} to={to} end={end}>{label}</NavLink>)}
+              <div className={`mainnav__dropdown${peopleOpen ? ' is-open' : ''}`}
+                onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setPeopleOpen(false); }}>
+                <button type="button" className={`mainnav__trigger${pathname.startsWith('/people') ? ' active' : ''}`}
+                  aria-expanded={peopleOpen} aria-controls="people-submenu"
+                  onClick={() => setPeopleOpen((value) => !value)}
+                  onKeyDown={(event) => { if (event.key === 'Escape') setPeopleOpen(false); }}>
+                  People <span aria-hidden="true">⌄</span>
+                </button>
+                <div id="people-submenu" className="mainnav__submenu">
+                  {PEOPLE_NAV.map(([to, label]) => <NavLink key={to} to={to}>{label}</NavLink>)}
+                </div>
+              </div>
+              {NAV.slice(3).map(([to, label, end]) => <NavLink key={to} to={to} end={end}>{label}</NavLink>)}
               <NavLink className="mainnav__join" to="/openings">Join us</NavLink>
             </div>
           </nav>
@@ -95,7 +115,7 @@ export default function SiteLayout() {
             <ul className="colophon__links">
               <li><Link to="/about">About</Link></li>
               <li><Link to="/research">Research</Link></li>
-              <li><Link to="/people">People</Link></li>
+              <li><Link to="/people/faculty">People</Link></li>
               <li><Link to="/publications">Publications</Link></li>
             </ul>
           </div>

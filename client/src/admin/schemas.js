@@ -31,7 +31,7 @@ export const COLLECTIONS = {
     fields: [
       { name: 'name', label: 'Full name', kind: 'text', required: true },
       { name: 'role', label: 'Role or designation', kind: 'text' },
-      { name: 'group', label: 'Group', kind: 'select', options: ['Faculty', 'Scientists & postdocs', 'PhD students', 'MTech & MSc students', 'Undergraduate researchers', 'Project staff', 'Alumni'] },
+      { name: 'group', label: 'Category / status', kind: 'select', options: ['Faculty', 'MTech & MSc students', 'PhD students', 'Alumni', 'Scientists & postdocs', 'Undergraduate researchers', 'Project staff'], help: 'To move a current student to the Alumni page, choose Alumni here and save the profile.' },
       { name: 'photo', label: 'Photo', kind: 'image' },
       { name: 'bio', label: 'Bio (shown in the "View bio" pop-up; leave a blank line between paragraphs)', kind: 'textarea', rows: 6 },
       { name: 'currentPosition', label: 'Current position (alumni only), e.g. Postdoc, EPFL', kind: 'text' },

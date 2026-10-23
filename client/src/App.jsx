@@ -26,7 +26,8 @@ export default function App() {
         <Route path="research" element={<Research />} />
         <Route path="research/:id" element={<ResearchDetail />} />
         <Route path="gallery" element={<Gallery />} />
-        <Route path="people" element={<People />} />
+        <Route path="people" element={<Navigate to="/people/faculty" replace />} />
+        <Route path="people/:section" element={<People />} />
         <Route path="publications" element={<Publications />} />
         <Route path="news" element={<News />} />
         <Route path="news/:id" element={<NewsItem />} />
