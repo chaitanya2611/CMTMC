@@ -612,7 +612,6 @@ body {
 /* inner pages */
 .pagehead { position: relative; overflow: hidden; background: #E1E9DC; border: 0; }
 .pagehead::before { content: ""; position: absolute; width: 420px; height: 420px; right: -120px; top: -220px; border: 72px solid rgba(214,242,74,.28); border-radius: 50%; }
-.pagehead::after { content: "CMTMC / IITB"; position: absolute; right: max(28px, calc((100vw - var(--shell))/2 + 28px)); bottom: 30px; color: rgba(16,61,50,.22); font: 750 .68rem/1 var(--sans); letter-spacing: .2em; }
 .pagehead__inner { position: relative; z-index: 1; padding-block: 42px 72px; }
 .pagehead h1 { max-width: 14em; font-size: clamp(3rem, 6vw, 5.8rem); font-weight: 500; letter-spacing: -.04em; }
 .pagehead__intro { max-width: 46em; font-size: 1.18rem; }
@@ -691,7 +690,6 @@ body {
   .theme__img { border-radius: 10px; }
   .pagehead__inner { padding-block: 28px 56px; }
   .pagehead h1 { font-size: clamp(2.7rem, 14vw, 4.3rem); }
-  .pagehead::after { display: none; }
   .colophon__lead { padding-block: 56px; }
 }
 
