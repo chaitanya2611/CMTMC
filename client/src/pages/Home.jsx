@@ -83,11 +83,10 @@ export default function Home() {
         </section>
       )}
 
-      {/* Research workflow: the visual story of the center's pipeline */}
+      {/* Visual story of the center's discovery pipeline */}
       <section className="band band--dark">
         <div className="shell">
           <div className="band__head">
-            <p className="kicker">Research workflow</p>
             <h2>From traditional knowledge to tested molecules</h2>
             <p>Natural compounds are converted into molecular data, computational and machine-learning methods screen them against biological targets, and promising interactions are investigated for therapeutic discovery.</p>
           </div>

@@ -39,8 +39,7 @@ export default function Research() {
       <section className="band band--dark">
         <div className="shell">
           <div className="band__head">
-            <p className="kicker">How the programmes connect</p>
-            <h2>Research workflow</h2>
+            <h2>How the programmes connect</h2>
           </div>
           <Workflow />
         </div>

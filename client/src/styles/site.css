@@ -172,7 +172,7 @@ a { color: inherit; }
 .band--dark .kicker { color: #D9B56A; }
 .band--dark h2 { color: #FBFAF6; }
 .band--dark .band__head p:not(.kicker) { color: rgba(230,235,240,.75); }
-.workflow { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0; border-top: 1px solid rgba(230,235,240,.16); }
+.workflow { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; border-top: 1px solid rgba(230,235,240,.16); }
 .workflow__step { position: relative; padding: 24px 18px 8px 0; }
 .workflow__step + .workflow__step { padding-left: 18px; border-left: 1px solid rgba(230,235,240,.12); }
 .workflow__step:not(:last-child)::after { content: ""; position: absolute; z-index: 1; top: calc(24px + 34%); right: -6px; width: 11px; height: 11px; border-top: 1.5px solid #D9B56A; border-right: 1.5px solid #D9B56A; transform: rotate(45deg); background: transparent; }

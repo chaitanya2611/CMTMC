@@ -152,11 +152,10 @@ export function ThemeVisual({ thrust, className = '', caption = false }) {
 
 // ---------- research workflow strip ----------
 export const WORKFLOW = [
-  { img: 'wf-plant', title: 'Traditional medicine', text: 'Classical texts and ethnobotanical records', alt: 'Leaf venation with the structure of quercetin' },
   { img: 'wf-chem', title: 'Natural-product chemistry', text: 'Phytochemical structures and scaffolds', alt: 'Three-dimensional model of curcumin' },
+  { img: 'wf-target', title: 'Molecular target', text: 'Proteins implicated in disease', alt: 'Ribbon model of c-Src kinase (PDB 2SRC) with its molecular surface' },
   { img: 'wf-dock', title: 'Computational screening', text: 'Docking and virtual screening against targets', alt: 'Close-up of a ligand in the ATP-binding pocket of c-Src kinase' },
   { img: 'wf-ml', title: 'AI and machine learning', text: 'Models that learn from molecular data', alt: 'Molecular graph and clusters in a learned embedding space' },
-  { img: 'wf-target', title: 'Molecular target', text: 'Proteins implicated in disease', alt: 'Ribbon model of c-Src kinase (PDB 2SRC) with its molecular surface' },
   { img: 'wf-cells', title: 'Biological validation', text: 'Assays that test predicted activity', alt: 'Fluorescence-microscopy-style image of cultured cells' },
 ];
 
