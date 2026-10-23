@@ -47,7 +47,7 @@ export default function Home() {
             </div>
             <p className="hero__system-label">One discovery engine</p>
             <ol>
-              <li><span>01</span> Traditional knowledge</li>
+              <li><span>01</span> Traditional methods</li>
               <li><span>02</span> Molecular intelligence</li>
               <li><span>03</span> Catalytic discovery</li>
             </ol>
@@ -87,7 +87,7 @@ export default function Home() {
       <section className="band band--dark">
         <div className="shell">
           <div className="band__head">
-            <h2>From traditional knowledge to tested molecules</h2>
+            <h2>From traditional methods to tested molecules</h2>
             <p>Natural compounds are converted into molecular data, computational and machine-learning methods screen them against biological targets, and promising interactions are investigated for therapeutic discovery.</p>
           </div>
           <Workflow />

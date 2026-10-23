@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "name": "Center for Machine Learning–Driven Traditional Medicine and Catalysis",
   "mission": "We systematically decode, validate, and translate traditional medical knowledge into scientifically rigorous, AI-enabled therapeutic innovations that address complex diseases and advance global healthcare.",
   "objectives": [
@@ -17,7 +17,7 @@
     },
     {
       "title": "Ensure Ethical Impact",
-      "text": "Prioritize affordable, safe, and sustainable therapeutic strategies with transparent, reproducible, and equitable benefit-sharing while stewarding traditional knowledge responsibly."
+      "text": "Prioritize affordable, safe, and sustainable therapeutic strategies with transparent, reproducible, and equitable benefit-sharing while stewarding traditional methods responsibly."
     },
     {
       "title": "Inform Global Health Policy",
