@@ -4,10 +4,10 @@ import { useSite } from '../lib/hooks.js';
 
 export default function About() {
   const { settings: s } = useSite();
-  if (!s) return <PageHead title="About the center" />;
+  if (!s) return <PageHead title="About" />;
   return (
     <>
-      <PageHead kicker="About" title="About the center" intro={s.name} />
+      <PageHead kicker="About" title="About" intro={s.name} />
       <section className="band">
         <div className="shell about">
           <div className="prose prose--lead">
