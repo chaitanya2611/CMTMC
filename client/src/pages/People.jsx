@@ -48,7 +48,7 @@ export default function People() {
 
   return (
     <>
-      <PageHead kicker="People" title="People" intro="Faculty, researchers and students working across chemistry, biology and machine learning. Select a name for a short profile." />
+      <PageHead kicker="People" title="People" intro="Faculty, researchers and students working across chemistry, biology and machine learning." />
       <section className="band">
         <div className="shell">
           {loading && <Loading />}
