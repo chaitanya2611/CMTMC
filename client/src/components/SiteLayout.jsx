@@ -14,8 +14,11 @@ const NAV = [
 
 const PEOPLE_NAV = [
   ['/people/faculty', 'Faculty'],
-  ['/people/mtech-msc', 'MTech–MSc'],
+  ['/people/scientists-postdocs', 'Scientists & Postdocs'],
   ['/people/phd', 'PhD'],
+  ['/people/mtech-msc', 'MTech–MSc'],
+  ['/people/undergraduate', 'Undergraduate Researchers'],
+  ['/people/project-staff', 'Project Staff'],
   ['/people/alumni', 'Alumni'],
 ];
 
