@@ -9,16 +9,16 @@ const force = process.argv.includes('--force');
 const settings = {
   key: 'site',
   shortName: 'CMTMC',
-  name: 'Centre for Machine Learning–Driven Traditional Medicine and Catalysis',
+  name: 'Center for Machine Learning–Driven Traditional Medicine and Catalysis',
   tagline: 'AI/ML × Chemistry × Biology',
   heroTitle: 'Traditional medicine, read by machines and made by catalysts',
   heroText: 'We bring machine learning, computational chemistry and molecular biology together to turn centuries of traditional-medicine knowledge into validated molecules, and to design the catalysts that make them sustainably.',
   about: 'Traditional systems such as Ayurveda, Siddha, Unani and Traditional Chinese Medicine describe thousands of plant preparations, but most of their active molecules, targets and mechanisms remain uncharacterised. Making those molecules at scale is a second, separate chemistry problem.',
-  aboutMore: 'The centre treats both as one data problem. We build knowledge graphs from classical texts and phytochemical databases, train models that link molecular structure to biological activity, and use machine learning to design chemical and enzymatic catalysts for green synthesis, then test the best candidates in the lab.',
+  aboutMore: 'The center treats both as one data problem. We build knowledge graphs from classical texts and phytochemical databases, train models that link molecular structure to biological activity, and use machine learning to design chemical and enzymatic catalysts for green synthesis, then test the best candidates in the lab.',
   mission: 'Turn traditional-medicine knowledge into validated, sustainably made molecules using machine learning.',
   vision: 'A world where every traditional remedy can be traced to its molecules, targets and evidence.',
   joinText: 'We welcome PhD students, postdoctoral fellows, project staff and visiting researchers. Write to us with your CV and a short note on the problem you would like to work on.',
-  email: 'contact@your-centre.example',
+  email: 'contact@your-center.example',
   phone: '',
   address: 'Add your department, institute and campus address from the admin panel.',
   stats: [
@@ -51,7 +51,7 @@ const platforms = [
 ].map((p, i) => ({ ...p, order: i }));
 
 const people = [
-  { name: '[Centre Head]', role: 'Professor & Head', group: 'Faculty', bio: 'Replace with name, photo and a short bio from the admin panel.', interests: ['ML for chemistry'] },
+  { name: '[Center Head]', role: 'Professor & Head', group: 'Faculty', bio: 'Replace with name, photo and a short bio from the admin panel.', interests: ['ML for chemistry'] },
   { name: '[Faculty member]', role: 'Associate Professor', group: 'Faculty', bio: 'Computational chemistry and catalysis.', interests: ['DFT', 'catalysis'] },
   { name: '[Faculty member]', role: 'Assistant Professor', group: 'Faculty', bio: 'Machine learning for molecular biology.', interests: ['GNNs', 'protein targets'] },
   { name: '[Student]', role: 'PhD scholar', group: 'PhD students', bio: 'Natural-product virtual screening.', interests: ['docking'] },

@@ -38,7 +38,7 @@ export default function SiteLayout() {
   useEffect(() => { setOpen(false); window.scrollTo(0, 0); }, [pathname]);
 
   const s = settings || {};
-  const fullName = s.name || 'Centre for Machine Learning–Driven Traditional Medicine and Catalysis';
+  const fullName = s.name || 'Center for Machine Learning–Driven Traditional Medicine and Catalysis';
 
   return (
     <SiteContext.Provider value={{ settings, reload }}>
@@ -64,7 +64,7 @@ export default function SiteLayout() {
               {NAV.map(([to, label, end]) => <NavLink key={to} to={to} end={end}>{label}</NavLink>)}
             </div>
           </nav>
-          <Link className="masthead__cta" to="/openings">Join the centre <span aria-hidden="true">↗</span></Link>
+          <Link className="masthead__cta" to="/openings">Join the center <span aria-hidden="true">↗</span></Link>
           <button className="menu-toggle" aria-expanded={open} aria-controls="site-nav" onClick={() => setOpen((o) => !o)}>
             <span aria-hidden="true" className="menu-toggle__bars" />{open ? 'Close' : 'Menu'}
           </button>
@@ -88,7 +88,7 @@ export default function SiteLayout() {
             <p className="colophon__addr">{s.address && !/^Add your/i.test(s.address) ? s.address : 'Indian Institute of Technology Bombay\nPowai, Mumbai, Maharashtra 400076\nIndia'}</p>
           </div>
           <div>
-            <h2 className="colophon__h">The centre</h2>
+            <h2 className="colophon__h">The center</h2>
             <ul className="colophon__links">
               <li><Link to="/about">About</Link></li>
               <li><Link to="/research">Research</Link></li>

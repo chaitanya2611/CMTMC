@@ -8,7 +8,7 @@ export default function Research() {
   const platforms = useApi('/platforms');
   return (
     <>
-      <PageHead kicker="Research" title="Research" intro="The centre's programmes connect traditional-medicine knowledge, computational chemistry and machine learning. Each lists its lead discipline; all draw on the others." />
+      <PageHead kicker="Research" title="Research" intro="The center's programmes connect traditional-medicine knowledge, computational chemistry and machine learning. Each lists its lead discipline; all draw on the others." />
       <section className="band">
         <div className="shell">
           {thrusts.loading && <Loading />}
@@ -52,7 +52,7 @@ export default function Research() {
             <div className="band__head">
               <p className="kicker">Resources</p>
               <h2>Platforms and tools</h2>
-              <p>Databases, models and software developed at the centre.</p>
+              <p>Databases, models and software developed at the center.</p>
             </div>
             <div className="table-wrap">
               <table className="platforms">

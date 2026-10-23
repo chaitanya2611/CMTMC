@@ -21,7 +21,7 @@ export default function Home() {
   const featured = realPubs.filter((p) => p.featured).slice(0, 3);
   const recent = realPubs.slice(0, 5);
   const realNews = (news.data || []).filter((n) => !isPlaceholder(n.title));
-  const name = s?.name || 'Centre for Machine Learning–Driven Traditional Medicine and Catalysis';
+  const name = s?.name || 'Center for Machine Learning–Driven Traditional Medicine and Catalysis';
 
   return (
     <>
@@ -73,19 +73,18 @@ export default function Home() {
         <section className="band">
           <div className="shell intro">
             <div>
-              <p className="kicker">About the centre</p>
               <h2>Bridging ancestral knowledge and molecular intelligence.</h2>
             </div>
             <div className="intro__text">
               {s.about ? <Paragraphs text={s.about} limit={2} /> : <p>{s.mission}</p>}
               {s.aboutMore && <Paragraphs text={s.aboutMore} limit={1} />}
-              <p><Link className="more" to="/about">More about the centre</Link></p>
+              <p><Link className="more" to="/about">More about the center</Link></p>
             </div>
           </div>
         </section>
       )}
 
-      {/* Research workflow: the visual story of the centre's pipeline */}
+      {/* Research workflow: the visual story of the center's pipeline */}
       <section className="band band--dark">
         <div className="shell">
           <div className="band__head">

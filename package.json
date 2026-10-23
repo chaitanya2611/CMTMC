@@ -2,7 +2,7 @@
   "name": "cmtmc-website",
   "version": "1.0.0",
   "private": true,
-  "description": "MERN website for the Centre for Machine Learning–Driven Traditional Medicine and Catalysis (CMTMC)",
+  "description": "MERN website for the Center for Machine Learning–Driven Traditional Medicine and Catalysis (CMTMC)",
   "scripts": {
     "install:all": "npm install && npm --prefix server install && npm --prefix client install",
     "dev": "concurrently -n api,web -c green,yellow \"npm --prefix server run dev\" \"npm --prefix client run dev\"",

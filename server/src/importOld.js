@@ -20,6 +20,7 @@ await mongoose.connect(config.mongoUri);
 const currentSettings = await Settings.findOne({ key: 'site' }).select('+aboutContentVersion').lean();
 if ((currentSettings?.aboutContentVersion || 0) < siteContent.version) {
   await Settings.findOneAndUpdate({ key: 'site' }, {
+    name: siteContent.name,
     mission: siteContent.mission,
     objectives: siteContent.objectives,
     closingStatement: siteContent.closingStatement,

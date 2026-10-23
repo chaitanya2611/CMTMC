@@ -45,7 +45,7 @@ export default function Publications() {
 
   return (
     <>
-      <PageHead kicker="Publications" title="Publications" intro="Journal articles, preprints and conference papers from the centre, listed by year." />
+      <PageHead kicker="Publications" title="Publications" intro="Journal articles, preprints and conference papers from the center, listed by year." />
       <section className="band">
         <div className="shell">
           <form className="filters" role="search" onSubmit={(e) => e.preventDefault()}>

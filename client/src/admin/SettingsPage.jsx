@@ -11,7 +11,7 @@ const GROUPS = [
   ] },
   { title: 'Identity', fields: [
     { name: 'shortName', label: 'Short name (shown in the header)', kind: 'text' },
-    { name: 'name', label: 'Full centre name', kind: 'text' },
+    { name: 'name', label: 'Full center name', kind: 'text' },
   ] },
   { title: 'Home page', fields: [
     { name: 'heroTitle', label: 'Headline', kind: 'text' },

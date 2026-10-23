@@ -23,7 +23,7 @@ export function useTitle(title) {
   const { settings } = useSite();
   useEffect(() => {
     const short = settings?.shortName || 'CMTMC';
-    document.title = title ? `${title} | ${short}` : `${short} | ${settings?.name || 'Centre for ML-Driven Traditional Medicine and Catalysis'}`;
+    document.title = title ? `${title} | ${short}` : `${short} | ${settings?.name || 'Center for ML-Driven Traditional Medicine and Catalysis'}`;
   }, [title, settings]);
 }
 
