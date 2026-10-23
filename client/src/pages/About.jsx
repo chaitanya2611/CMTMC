@@ -1,4 +1,4 @@
-import { PageHead, Paragraphs, ExternalLink } from '../components/ui.jsx';
+import { PageHead, Paragraphs, PartnerCard } from '../components/ui.jsx';
 import Pipeline from '../components/Pipeline.jsx';
 import { useSite } from '../lib/hooks.js';
 
@@ -58,7 +58,7 @@ export default function About() {
           <div className="shell">
             <div className="band__head"><h2>Partners and collaborators</h2></div>
             <ul className="partners">
-              {s.partners.map((p, i) => <li key={i}><ExternalLink href={p.link}>{p.name}</ExternalLink></li>)}
+              {s.partners.map((p, i) => <li key={`${p.name}-${i}`}><PartnerCard partner={p} /></li>)}
             </ul>
           </div>
         </section>

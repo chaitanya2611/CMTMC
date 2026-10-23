@@ -23,7 +23,7 @@ const settingsSchema = new Schema({
   },
   stats: [{ _id: false, value: str(20), label: str(80) }],
   pipeline: [{ _id: false, title: str(60), text: str(400) }],
-  partners: [{ _id: false, name: str(120), link: url }],
+  partners: [{ _id: false, name: str(120), logo: url, link: url }],
   // Announcement bar across the top of every page
   bannerOn: { type: Boolean, default: false },
   bannerText: str(240), bannerLabel: str(40),

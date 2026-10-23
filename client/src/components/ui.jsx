@@ -65,6 +65,18 @@ export function ExternalLink({ href, children, className }) {
   return <a className={className} href={href} target="_blank" rel="noreferrer">{children}</a>;
 }
 
+export function PartnerCard({ partner }) {
+  const content = (
+    <>
+      {partner.logo && <img className="partner__logo" src={partner.logo} alt="" loading="lazy" />}
+      <span className="partner__name">{partner.name}</span>
+    </>
+  );
+  return partner.link
+    ? <a className="partner" href={partner.link} target="_blank" rel="noreferrer" aria-label={`${partner.name} website`}>{content}</a>
+    : <div className="partner">{content}</div>;
+}
+
 /** Native modal dialog: focus is trapped, Esc and the backdrop close it. */
 export function Modal({ open, onClose, label, className = '', children }) {
   const ref = useRef(null);

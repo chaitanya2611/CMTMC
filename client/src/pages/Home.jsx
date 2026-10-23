@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { DisciplineTag, Avatar, Paragraphs, DateBlock, ExternalLink } from '../components/ui.jsx';
+import { DisciplineTag, Avatar, Paragraphs, DateBlock, ExternalLink, PartnerCard } from '../components/ui.jsx';
 import { HeroMedia, ThemeVisual, Workflow } from '../components/SciMedia.jsx';
 import { useApi, useSite, useTitle, fmtDate } from '../lib/hooks.js';
 
@@ -237,9 +237,9 @@ export default function Home() {
       {s?.partners?.length > 0 && (
         <section className="band band--white">
           <div className="shell">
-            <div className="band__head"><h2>Partners and affiliations</h2></div>
+            <div className="band__head"><h2>Partners and collaborators</h2></div>
             <ul className="partners">
-              {s.partners.map((p, i) => <li key={i}><ExternalLink href={p.link}>{p.name}</ExternalLink></li>)}
+              {s.partners.map((p, i) => <li key={`${p.name}-${i}`}><PartnerCard partner={p} /></li>)}
             </ul>
           </div>
         </section>

@@ -34,7 +34,7 @@ const SOCIAL = [['linkedin', 'LinkedIn'], ['twitter', 'X / Twitter'], ['github',
 const LISTS = [
   { name: 'objectives', title: 'Objectives (About page, in order)', item: 'objective', cols: [['title', 'Objective'], ['text', 'Description']] },
   { name: 'pipeline', title: 'How a project runs (steps, in order)', item: 'step', cols: [['title', 'Step'], ['text', 'Description']] },
-  { name: 'partners', title: 'Partners and collaborators', item: 'partner', cols: [['name', 'Name'], ['link', 'Website (https://…)']] },
+  { name: 'partners', title: 'Partners and collaborators', item: 'partner', cols: [['name', 'Name', 'text'], ['logo', 'Logo', 'image'], ['link', 'Website (https://…)', 'url']] },
 ];
 
 export default function SettingsPage({ onSaved }) {
@@ -106,13 +106,9 @@ function ListEditor({ def, rows, onChange }) {
       {!rows.length && <p className="adm-muted">None yet. This part of the site stays hidden until you add one.</p>}
       {rows.map((r, i) => (
         <div key={i} className="adm-row">
-          {def.cols.map(([k, label]) => (
-            <div key={k} className="adm-field">
-              <label htmlFor={`${def.name}-${i}-${k}`}>{label}</label>
-              {k === 'text'
-                ? <textarea id={`${def.name}-${i}-${k}`} rows={2} value={r[k] || ''} onChange={(e) => update(i, k, e.target.value)} />
-                : <input id={`${def.name}-${i}-${k}`} type="text" value={r[k] || ''} onChange={(e) => update(i, k, e.target.value)} />}
-            </div>
+          {def.cols.map(([k, label, kind]) => (
+            <Field key={k} def={{ name: k, label, kind: kind || (k === 'text' ? 'textarea' : 'text'), rows: 2 }}
+              value={r[k]} onChange={(value) => update(i, k, value)} idPrefix={`${def.name}-${i}`} />
           ))}
           <div className="adm-row__tools">
             <button type="button" aria-label="Move up" disabled={i === 0} onClick={() => move(i, -1)}>▲</button>
