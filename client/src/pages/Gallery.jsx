@@ -40,7 +40,7 @@ export default function Gallery() {
 
   return (
     <>
-      <PageHead kicker="Gallery" title="Gallery" intro="Photographs from conferences, seminars, awards and center events. Select an album to view it." />
+      <PageHead kicker="Gallery" title="Gallery" />
       <section className="band">
         <div className="shell">
           {loading && <Loading />}
